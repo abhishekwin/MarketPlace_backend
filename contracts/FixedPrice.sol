@@ -1,24 +1,39 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.12;
+pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/interfaces/IERC721.sol";
 import "@openzeppelin/contracts/interfaces/IERC20.sol";
+
+interface IERC721Mint is IERC721 {
+    function mint(
+        address creator,
+        address to,
+        string memory tokenURI,
+        uint256 _royality
+    ) external returns (uint256);
+}
+
+interface IERC20Token is IERC20 {
+    function balanceOf(address msg_sender) external view returns (uint256);
+}
 
 contract FlatSale {
     struct SellerDetails {
         address seller;
         address collectionAddress;
         address assetAddress;
+        address paymentAssetAddress;
         uint256 tokenId;
         uint256 royality;
         uint256 amount;
-        bytes32 seller_signature;
+        bytes seller_signature;
         string URI;
         uint256 nonce;
     }
     uint256 nonce;
+    uint256 platformfeepercent = 2500;
 
-    function lazyBuy(SellerDetails calldata sellerDetails) {
+    function lazyBuy(SellerDetails calldata sellerDetails) public {
         verifySellerSign(
             sellerDetails.seller,
             sellerDetails.tokenId,
@@ -27,18 +42,47 @@ contract FlatSale {
             sellerDetails.assetAddress,
             sellerDetails.seller_signature
         );
-        IERC721 instance = IERC721(nftContract);
-        if (instance.ownerOf(tokenId) == sellerDetails.seller || tokenId > 0) {
+        IERC721Mint instance = IERC721Mint(sellerDetails.assetAddress);
+        if (
+            instance.ownerOf(sellerDetails.tokenId) == sellerDetails.seller ||
+            sellerDetails.tokenId > 0
+        ) {
             require(
                 instance.isApprovedForAll(
                     sellerDetails.seller,
-                    address(this) &&
-                        instance.getApproved(tokenId) == address(this),
-                    "address not approve"
-                )
+                    address(this)
+                ) &&
+                    instance.getApproved(sellerDetails.tokenId) ==
+                    address(this),
+                "address not approve"
             );
-            instance.transferFrom(sellerDetails.seller, msg.sender, tokenID);
-        } else {}
+            instance.transferFrom(
+                sellerDetails.seller,
+                msg.sender,
+                sellerDetails.tokenId
+            );
+        } else {
+            instance.mint(
+                msg.sender,
+                sellerDetails.seller,
+                sellerDetails.URI,
+                sellerDetails.royality
+            );
+        }
+        // Write Fund Tranfer Code
+        IERC20Token instanceERC20 = IERC20Token(
+            sellerDetails.paymentAssetAddress
+        );
+        require(
+            sellerDetails.amount == instanceERC20.balanceOf(msg.sender),
+            "Insufficient Amount"
+        );
+
+        instanceERC20.transferFrom(
+            msg.sender,
+            sellerDetails.seller,
+            sellerDetails.amount
+        );
     }
 
     function getSigner(bytes32 hash, bytes memory _signature)
@@ -46,7 +90,8 @@ contract FlatSale {
         pure
         returns (address)
     {
-        (bytes32 v, bytes32 s, uint8 v) = splitSignature(_signature);
+        (bytes32 r, bytes32 s, uint8 v) = splitSignature(_signature);
+
         return
             ecrecover(
                 keccak256(
