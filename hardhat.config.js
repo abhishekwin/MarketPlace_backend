@@ -39,5 +39,6 @@ module.exports = {
 
   
 
-//0x52D9D282A3bA3B4D7cFe68ad385041D24d23B04f  ropsten
+//0xb77a802Fd7d0c6628B4A664Ac8760e3E263B86E9 ropsten mytoken proxy per
+// 0x94fdc47621bd04798fe31e6ed280293f14d57b27  mytoken conrtract tem
 // 0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0   localhost

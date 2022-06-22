@@ -1,4 +1,6 @@
 const { expect } = require("chai");
+const { ethers, upgrades } = require("hardhat");
+
 let deployer, add1, add2, myNFT, tokenId;
 
 describe("MyNFT", () => {
@@ -7,10 +9,19 @@ describe("MyNFT", () => {
     [deployer, add1, add2, add3, add4, add5, _] = accounts;
 
     //Deployed Token
-    const MyNFT = await hre.ethers.getContractFactory("MyNFT");
-    myNFT = await MyNFT.deploy("500");
-    await myNFT.deployed();
+    //   const MyNFT = await hre.ethers.getContractFactory("MyNFT");
+    //   myNFT = await MyNFT.deploy("500");
+    //   await myNFT.deployed();
 
+    //   console.log("MyNFT deployed to:", myNFT.address);
+    // });
+
+    let MyNFT = await hre.ethers.getContractFactory("MyNFT");
+
+    myNFT = await upgrades.deployProxy(MyNFT, [500], {
+      initializer: "initialize",
+    });
+    await myNFT.deployed();
     console.log("MyNFT deployed to:", myNFT.address);
   });
 
@@ -20,13 +31,13 @@ describe("MyNFT", () => {
     });
 
     it("Should check that NFT is mint ", async () => {
-      await myNFT.mint(deployer.address, "hello world", 400);
+      await myNFT.mint(deployer.address, deployer.address, "hello world", 400);
       expect(await myNFT.ownerOf(1)).to.be.equal(deployer.address);
     });
 
     it("Should check that royality", async () => {
       await expect(
-        myNFT.mint(deployer.address, "hello world", 600)
+        myNFT.mint(deployer.address, deployer.address, "hello world", 600)
       ).to.be.revertedWith("Royality should be less");
     });
 
@@ -34,6 +45,7 @@ describe("MyNFT", () => {
       await expect(
         myNFT.mint(
           "0x0000000000000000000000000000000000000000",
+          deployer.address,
           "hello world",
           400
         )
@@ -56,7 +68,6 @@ describe("MyNFT", () => {
       const abc = await myNFT.balanceOf(add1.address);
       console.log("balance", abc);
     });
-    
   });
 
   describe("approve Method ", () => {
@@ -84,8 +95,15 @@ describe("MyNFT", () => {
 
   describe("Checking that getApproved function", () => {
     it("Should check tokenId address", async () => {
-      await expect(myNFT.connect(add1.address).getApproved(2)).to.be.revertedWith("ERC721: approved query for nonexistent token")
-
+      await expect(
+        myNFT.connect(add1.address).getApproved(2)
+      ).to.be.revertedWith("ERC721: approved query for nonexistent token");
     });
-    })
-  })
+  });
+  describe("Checking that supportInterface function", () => {
+    it("Should check the Interface id", async () => {
+      expect(await myNFT.supportsInterface(0x01ffc9a7)).to.be.equal(true);
+      expect(await myNFT.supportsInterface(0xffffffff)).to.be.equal(false);
+    });
+  });
+});

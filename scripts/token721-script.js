@@ -22,6 +22,9 @@ async function main() {
   // console.log("MyNFT deployed to:", myNFT.address);
 
   const MyNFT = await hre.ethers.getContractFactory("MyNFT");
+
+  
+  
   const myNFT = await upgrades.deployProxy(MyNFT, [500], {
     initializer: "initialize",
   });
