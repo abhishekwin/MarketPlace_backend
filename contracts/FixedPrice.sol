@@ -74,14 +74,23 @@ contract FlatSale {
             sellerDetails.paymentAssetAddress
         );
         require(
-            sellerDetails.amount == instanceERC20.balanceOf(msg.sender),
+            sellerDetails.amount <= instanceERC20.balanceOf(msg.sender),
             "Insufficient Amount"
         );
-
+        require(
+            instanceERC20.allowance(msg.sender, address(this)) >=
+                sellerDetails.amount,
+            "Check the token allowance."
+        );
+        // transfer seller amount - platformfee
+        uint256 feeonplatform = (sellerDetails.amount * platformfeepercent) /
+            10000;
+        instanceERC20.transferFrom(msg.sender, address(this), feeonplatform);
+        uint256 remaining_amount = sellerDetails.amount - feeonplatform;
         instanceERC20.transferFrom(
             msg.sender,
             sellerDetails.seller,
-            sellerDetails.amount
+            remaining_amount
         );
     }
 
