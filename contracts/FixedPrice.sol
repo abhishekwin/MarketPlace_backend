@@ -20,14 +20,13 @@ interface IERC20Token is IERC20 {
 contract FlatSale {
     struct SellerDetails {
         address seller;
-        address collectionAddress;
         address assetAddress;
         address paymentAssetAddress;
         uint256 tokenId;
         uint256 royality;
         uint256 amount;
         bytes seller_signature;
-        string URI;
+        string tokenURI;
         uint256 nonce;
     }
     uint256 nonce;
@@ -37,6 +36,7 @@ contract FlatSale {
         verifySellerSign(
             sellerDetails.seller,
             sellerDetails.tokenId,
+            sellerDetails.tokenURI,
             sellerDetails.amount,
             sellerDetails.paymentAssetAddress,
             sellerDetails.assetAddress,
@@ -51,7 +51,7 @@ contract FlatSale {
                 instance.isApprovedForAll(
                     sellerDetails.seller,
                     address(this)
-                ) &&
+                ) ||
                     instance.getApproved(sellerDetails.tokenId) ==
                     address(this),
                 "address not approve"
@@ -65,7 +65,7 @@ contract FlatSale {
             instance.mint(
                 msg.sender,
                 sellerDetails.seller,
-                sellerDetails.URI,
+                sellerDetails.tokenURI,
                 sellerDetails.royality
             );
         }
@@ -95,7 +95,7 @@ contract FlatSale {
     }
 
     function getSigner(bytes32 hash, bytes memory _signature)
-        internal
+        public
         pure
         returns (address)
     {
@@ -115,13 +115,20 @@ contract FlatSale {
     function verifySellerSign(
         address seller,
         uint256 tokenId,
+        string memory tokenURI,
         uint256 amount,
         address paymentAssetAddress,
         address assetAddress,
         bytes memory _signature
-    ) internal pure {
+    ) public pure {
         bytes32 hash = keccak256(
-            abi.encodePacked(assetAddress, tokenId, paymentAssetAddress, amount)
+            abi.encodePacked(
+                assetAddress,
+                tokenId,
+                tokenURI,
+                paymentAssetAddress,
+                amount
+            )
         );
 
         require(
