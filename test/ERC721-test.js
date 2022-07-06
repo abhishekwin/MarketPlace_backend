@@ -8,13 +8,7 @@ describe("MyNFT", () => {
     accounts = await ethers.getSigners();
     [deployer, add1, add2, add3, add4, add5, _] = accounts;
 
-    //Deployed Token
-    //   const MyNFT = await hre.ethers.getContractFactory("MyNFT");
-    //   myNFT = await MyNFT.deploy("500");
-    //   await myNFT.deployed();
-
-    //   console.log("MyNFT deployed to:", myNFT.address);
-    // });
+    
 
     let MyNFT = await hre.ethers.getContractFactory("MyNFT");
 
@@ -26,34 +20,33 @@ describe("MyNFT", () => {
   });
 
   describe("Setter Methods ", () => {
-    it("Should check that Maximum Royalty is ", async () => {
+    it("Should check that Maximum Royalty is", async () => {
       expect(await myNFT.maximumRoyality()).to.be.equals(500);
     });
 
     it("Should check that NFT is mint ", async () => {
-      await myNFT.mint(deployer.address, deployer.address, "hello world", 400);
+      await myNFT.mint(deployer.address, "hello world", 400);
       expect(await myNFT.ownerOf(1)).to.be.equal(deployer.address);
     });
 
-    it("Should check that royality", async () => {
+    it("Should check royality", async () => {
       await expect(
-        myNFT.mint(deployer.address, deployer.address, "hello world", 600)
+        myNFT.mint(deployer.address, "hello world", 800)
       ).to.be.revertedWith("Royality should be less");
     });
 
-    it("Should check that Address", async () => {
+    it("Should check Address", async () => {
       await expect(
         myNFT.mint(
           "0x0000000000000000000000000000000000000000",
-          deployer.address,
           "hello world",
           400
         )
-      ).to.be.revertedWith("Token contract: to address can't be 0x0");
+      ).to.be.revertedWith("MyNFT: to address can't be 0x0");
     });
   });
 
-  describe(" transferFrom Method ", () => {
+  describe("transferFrom Method", () => {
     it("Should transfer token betwen accounts", async () => {
       await myNFT
         .connect(deployer)

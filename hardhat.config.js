@@ -12,7 +12,7 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
   }
 });
 const Private_Key = "13b110e7ac194d2827d04f17c11726068bb2dc19b595b5a33acaf7fc15604e1b"
-const ropsten_api_key = "K63V19BYNUEP2EEIKIZYE1CGWY85SCRF41"
+const rinkeby_api_key = "K63V19BYNUEP2EEIKIZYE1CGWY85SCRF41"
 // You need to export an object to set up your config
 // Go to https://hardhat.org/config/ to learn more
 
@@ -25,14 +25,14 @@ module.exports = {
 
   solidity: "0.8.4",
   networks: {
-  	ropsten: {
+  	rinkeby: {
   		url: `https://ropsten.infura.io/v3/328ff9ac7ccf4b8b98de2b55b4047bd6`,
   		accounts: [`0x${Private_Key}`]
   	},
   },
   etherscan: {
     apiKey: {
-      ropsten: ropsten_api_key,
+      rinkeby: ropsten_api_key,
     }
   }
 }
