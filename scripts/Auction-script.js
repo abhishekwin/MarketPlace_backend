@@ -16,10 +16,8 @@ async function main() {
   // We get the contract to deploy
   const Auction = await hre.ethers.getContractFactory("Auction");
   const auction = await Auction.deploy();
-
   await auction.deployed();
-
-  console.log("Auction deployed to:", auction.address);
+  console.log("auction deployed to:", auction.address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere

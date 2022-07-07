@@ -1,38 +1,31 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/interfaces/IERC721.sol";
-import "@openzeppelin/contracts/interfaces/IERC20.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC721/IERC721Upgradeable.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "contracts/mocks/interfaces/IERC721Mint.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
-interface IERC721Mint is IERC721 {
-    function mint(
-        address creator,
-        address to,
-        string memory tokenURI,
-        uint256 _royality
-    ) external returns (uint256);
-}
 
-interface IERC20Token is IERC20 {
-    function balanceOf(address msg_sender) external view returns (uint256);
-}
+contract Auction is Initializable, OwnableUpgradeable{
+    // mapping for nonce
+    mapping(uint256 => bool) public isNonceProcessed;
 
-contract Auction {
-    uint256 nonce;
-
-    uint  platformFeePercent = 2500;
-
+    uint256 public platFormFeePercent;
+    uint256 constant public decimalPrecision = 100;
 
     struct SellerDetails {
         address seller;
-        address collectionAddress;
         address assetAddress;
-        address paymentAssetAddress;
+        // address collectionAddress;
         uint256 tokenId;
-        uint256 royality;
         uint256 amount;
+        address paymentAssetAddress;
+        string  URI;
         bytes seller_signature;
-        string URI;
+        uint256 royality;
         uint256 nonce;
         uint256 startTime;
         uint256 endTime;
@@ -40,63 +33,92 @@ contract Auction {
     }
 
     struct BidderDetails {
-        address assetAddress;
-        address paymentAssetAddress;
         address bidderAddress;
-        uint256 bidTime;
-        bytes bidderSignature;
-        uint256 amount;
+        address assetAddress;
         uint256 tokenId;
+        uint256 amount;
+        address paymentAssetAddress;
+        string URI;
+        bytes bidderSignature;
+        uint256 bidTime;
     }
-
+    
+    function initialize(uint256 _platFormFeePercent) public initializer {
+        __Ownable_init();
+        platFormFeePercent = _platFormFeePercent;
+    }
+    
+    function setPlatFormFeePercent(uint256 _newPlatFormFeePercent) public {
+        platFormFeePercent = _newPlatFormFeePercent;
+    }
+    
     function lazyAuction(
-    //    address assetAddress,
-    //    uint256 tokenId, 
+   
        SellerDetails calldata sellerDetails, BidderDetails calldata bidderDetails)
         external {
-         verifySellerSign(
+
+            require(
+            !isNonceProcessed[sellerDetails.nonce],
+            "Auction: nonce already process"
+        );
+        
+        address sellerSigner = verifySellerSign(
             sellerDetails.seller,
+            sellerDetails.assetAddress,
             sellerDetails.tokenId,
             sellerDetails.amount,
             sellerDetails.paymentAssetAddress,
-            sellerDetails.assetAddress,
+            sellerDetails.URI,
             sellerDetails.seller_signature
         );
-       
-         verifyBidderSign(
+        require(sellerDetails.seller == sellerSigner);
+           
+           require(
+            !isNonceProcessed[sellerDetails.nonce],
+            "Auction: nonce already process"
+        );
+        
+        address bidderSigner = verifyBidderSign(
             bidderDetails.bidderAddress,
+            bidderDetails.assetAddress,
             bidderDetails.tokenId,
             bidderDetails.amount,
             bidderDetails.paymentAssetAddress,
-            bidderDetails.assetAddress,
-            bidderDetails.bidderSignature    
+            bidderDetails.URI,
+            bidderDetails.bidderSignature
+        );
+      
+        require(
+            sellerDetails.seller == sellerSigner,
+            "seller sign verification failed"
         );
 
+        // Mint
         IERC721Mint instance = IERC721Mint(sellerDetails.assetAddress);
         if (
-            instance.ownerOf(sellerDetails.tokenId) == sellerDetails.seller ||
             sellerDetails.tokenId > 0
         ) {
             require(
                 instance.isApprovedForAll(
                     sellerDetails.seller,
                     address(this)
-                ) &&
+                )||
                     instance.getApproved(sellerDetails.tokenId) ==
                     address(this),
-                "address not approve"
+                "Auction: address not approve"
             );
             instance.transferFrom(
                 sellerDetails.seller,
-                msg.sender,
+                bidderDetails.bidderAddress,
                 sellerDetails.tokenId
             );
         } 
         
         else {
-            instance.mint(
-                msg.sender,
-                sellerDetails.seller,
+
+             instance.mint(
+                bidderDetails.bidderAddress,
+                // sellerDetails.seller,
                 sellerDetails.URI,
                 sellerDetails.royality
             );
@@ -104,27 +126,38 @@ contract Auction {
 
 
       // Fund Tranfer 
-        IERC20Token instanceERC20 = IERC20Token(
+        IERC20 instanceERC20 = IERC20(
             sellerDetails.paymentAssetAddress
         );
-        require(instanceERC20.balanceOf(bidderDetails.bidderAddress)>= bidderDetails.amount,"Insuficent fund");
 
-        require(instanceERC20.allowance(msg.sender, address(this)) >= sellerDetails.amount,"Check the token allowance."
+        require(
+            instanceERC20.balanceOf(bidderDetails.bidderAddress)>= 
+            bidderDetails.amount,
+            "Auction: Insuficent fund"
+        );
+       
+        require(
+            instanceERC20.allowance(msg.sender, address(this)) >=
+                sellerDetails.amount,
+            "Auction: Check the token allowance."
         );
 
+
         // platformfee/ServiceFee
-        uint256 feeonplatform = (sellerDetails.amount * platformFeePercent) / 10000;
-        instanceERC20.transferFrom(msg.sender, address(this), feeonplatform);
-        uint256 remaining_amount = sellerDetails.amount - feeonplatform;
+         uint256 platFormFee = ((sellerDetails.amount * platFormFeePercent) /
+            100) * decimalPrecision;
+
+        instanceERC20.transferFrom(bidderDetails.bidderAddress, address(this), platFormFee);
+        uint256 remaining_amount = sellerDetails.amount - platFormFee;
         instanceERC20.transferFrom(
-            msg.sender,
+            bidderDetails.bidderAddress,
             sellerDetails.seller,
             remaining_amount
         );
     }
 
     function getSigner(bytes32 hash, bytes memory _signature)
-        internal
+        public
         pure
         returns (address)
     {
@@ -141,27 +174,30 @@ contract Auction {
     }
     
     function verifySellerSign(
+        address assetAddress, 
         address seller, 
         uint256 tokenId, 
         uint amount, 
         address paymentAssetAddress, 
-        address assetAddress, 
+        string memory URI,
         bytes memory _signature
-        ) internal pure {
-        bytes32 hash = keccak256(abi.encodePacked(assetAddress,tokenId,paymentAssetAddress,amount));
-        require(seller == getSigner(hash, _signature), "seller sign verification failed");
+        ) public pure returns (address){
+        bytes32 hash = keccak256(abi.encodePacked(assetAddress,tokenId,URI, paymentAssetAddress,amount));
+        return  getSigner(hash, _signature);
     }
 
+
     function verifyBidderSign(
+        address assetAddress, 
         address bidder, 
         uint256 tokenId, 
         uint amount, 
         address paymentAssetAddress, 
-        address assetAddress, 
+        string memory URI,
         bytes memory _signature
-        ) internal pure {
-        bytes32 hash = keccak256(abi.encodePacked(assetAddress,tokenId,paymentAssetAddress,amount));
-        require(bidder == getSigner(hash, _signature), "bidder sign verification failed");
+        ) public pure returns (address) {
+        bytes32 hash = keccak256(abi.encodePacked(assetAddress,tokenId, URI, paymentAssetAddress,amount));
+        return getSigner(hash, _signature);
     }
 
 
@@ -180,6 +216,14 @@ contract Auction {
             s := mload(add(sig, 64))
             v := byte(0, mload(add(sig, 96)))
         }
+    }
+
+     // Fallback function must be declared as external.
+    fallback() external payable {
+        // send / transfer (forwards 2300 gas to this fallback function)
+        // call (forwards all of the gas)
+    }
+    receive() external payable {
     }
 }
 
