@@ -8,6 +8,7 @@ const { upgrades } = require("hardhat");
 
 async function main() {
 const ERC721Token = await hre.ethers.getContractFactory("ERC721Token");
+  
   const erc721Token = await upgrades.upgradeProxy("0x57A5BC0ec9a36F2cf6d9d9e3e01133cF5BD33316",ERC721Token )
   await erc721Token.deployed();
   console.log("ERC721Token Updated");

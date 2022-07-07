@@ -1,4 +1,3 @@
-
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
@@ -11,7 +10,6 @@ import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721Enumer
 import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721PausableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721RoyaltyUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
-
 
 contract ERC721Token is
     ERC721Upgradeable,
@@ -29,9 +27,13 @@ contract ERC721Token is
 
     function initialize(uint96 _maxRoyality) public initializer {
         __ERC721_init("MarketPlace", "MKP");
+        __ERC721Burnable_init();
+        __ERC721Enumerable_init();
+        __ERC721Pausable_init();
+        __ERC721Royalty_init();
+        __ERC721URIStorage_init();
         __Ownable_init();
         _tokenIds.increment();
-
         maximumRoyality = _maxRoyality;
     }
 
@@ -48,8 +50,14 @@ contract ERC721Token is
         string memory tokenURI,
         uint96 _royality
     ) external returns (uint256) {
-        require(_royality <= maximumRoyality, "ERC721Token: Royality should be less");
-        require(address(to) != address(0), "ERC721Token: to address can't be 0x0");
+        require(
+            _royality <= maximumRoyality,
+            "ERC721Token: Royality should be less"
+        );
+        require(
+            address(to) != address(0),
+            "ERC721Token: to address can't be 0x0"
+        );
         uint256 newItemId = _tokenIds.current();
 
         _mint(to, newItemId);
@@ -76,7 +84,9 @@ contract ERC721Token is
             ERC721PausableUpgradeable,
             ERC721Upgradeable
         )
-    {}
+    {
+        super._beforeTokenTransfer(from, to, tokenId);
+    }
 
     function _burn(uint256 tokenId)
         internal
@@ -113,6 +123,4 @@ contract ERC721Token is
     {
         return super.tokenURI(tokenId);
     }
-
-
 }
