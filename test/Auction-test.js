@@ -22,10 +22,13 @@ describe("Auction", () => {
     [seller, bidder, add2, auction, add3, add4, _] = accounts;
 
     // NFT721
-    MyNFT = await hre.ethers.getContractFactory("MyNFT");
-    myNFT = await MyNFT.deploy(500);
+    let MyToken = await hre.ethers.getContractFactory("MyNFT");
 
+    myNFT = await upgrades.deployProxy(MyToken, [500], {
+      initializer: "initialize",
+    });
     await myNFT.deployed();
+    console.log("MyNFT deployed to:", myNFT.address);
 
     // Weth
     WETH = await hre.ethers.getContractFactory("WETH");
@@ -33,10 +36,15 @@ describe("Auction", () => {
 
     await weth.deployed();
 
-    // erc20Token Token Deployed
-    erc20Token = await hre.ethers.getContractFactory("erc20Token");
-    erc20token = await erc20Token.deploy();
-    await erc20token.deployed();
+ 
+    const ERC20Token = await hre.ethers.getContractFactory("ERC20Token");
+     myToken = await ERC20Token.deploy("1000")
+
+    await myToken.deployed();
+
+    console.log("ERC20Token deployed to:",myToken.address);
+
+
 
     //Deployed Contract
     Auction = await hre.ethers.getContractFactory("Auction");
@@ -101,7 +109,7 @@ describe("Auction", () => {
       //  seller sign
       let message = ethers.utils.solidityPack(
         ["address", "uint256", "string", "address", "uint256"],
-        [myNFT.address, "0", "uri", erc20token.address, "300"]
+        [myNFT.address, "0", "uri", myToken.address, "300"]
       );
       let messageHash = ethers.utils.keccak256(message);
 
@@ -115,15 +123,15 @@ describe("Auction", () => {
 
       let messageHash1 = ethers.utils.keccak256(message);
       let bidderSign = await web3.eth.sign(messageHash1, accounts[1].address);
-      await erc20token.connect(bidder).deposit({ value: "1000000000000" });
-      await erc20token.connect(bidder).approve(auction.address, 3000);
+      await myToken.connect(bidder).deposit({ value: "1000000000000" });
+      await myToken.connect(bidder).approve(auction.address, 3000);
 
       let sellerStruct = [
         seller.address,
         myNFT.address,
         "0",
         300,
-        erc20token.address,
+        myToken.address,
         "uri",
         sellerSign,
         royality,
@@ -137,7 +145,7 @@ describe("Auction", () => {
         myNFT.address,
         "0",
         300,
-        erc20token.address,
+        myToken.address,
         "uri",
         bidderSign,
         bidTime,
@@ -154,7 +162,7 @@ describe("Auction", () => {
       //  seller sign
       let message = ethers.utils.solidityPack(
         ["address", "uint256", "string", "address", "uint256"],
-        [myNFT.address, "1", "uri", erc20token.address, "300"]
+        [myNFT.address, "1", "uri", myToken.address, "300"]
       );
       let messageHash = ethers.utils.keccak256(message);
 
