@@ -8,6 +8,7 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
 
 contract FlatSale is Initializable, OwnableUpgradeable {
+    ///creating seller details struct
     struct SellerDetails {
         uint256 nonce;
         address sellerAddress;
@@ -19,10 +20,14 @@ contract FlatSale is Initializable, OwnableUpgradeable {
         bytes sellerSignature;
         string tokenUri;
     }
-
+    ///mapping for nonce
     mapping(uint256 => bool) public isNonceProcessed;
-    uint256 platFormFeePercent;
+    uint256 platFormFeePercent = 2500;
 
+    /**
+     * @dev Method to update/reset platFormFeePercent
+     * Name of _platFormFeePercent to update the PlatformFee
+     */
     function initialize(uint256 _platFormFeePercent) public initializer {
         __Ownable_init();
         platFormFeePercent = _platFormFeePercent;
@@ -30,10 +35,12 @@ contract FlatSale is Initializable, OwnableUpgradeable {
 
     uint256 public constant decimalPrecision = 100;
 
-    function setPlatFormFee(uint256 newPlatFormFeePercent) public {
-        platFormFeePercent = newPlatFormFeePercent;
-    }
-
+    // function setPlatFormFee(uint256 newPlatFormFeePercent) public {
+    //     platFormFeePercent = newPlatFormFeePercent;
+    // }
+    /**
+     *@dev Method to  nft's
+     */
     function lazyBuy(SellerDetails calldata sellerDetails) public {
         require(
             !isNonceProcessed[sellerDetails.nonce],
@@ -78,7 +85,7 @@ contract FlatSale is Initializable, OwnableUpgradeable {
                 tokenId
             );
         }
-        // Write Fund Tranfer Code
+        /// Write Fund Tranfer Code
         IERC20 instanceERC20 = IERC20(sellerDetails.paymentAssetAddress);
         require(
             sellerDetails.amount <= instanceERC20.balanceOf(msg.sender),
@@ -89,7 +96,7 @@ contract FlatSale is Initializable, OwnableUpgradeable {
                 sellerDetails.amount,
             "FlatSale: Check the token allowance."
         );
-        // transfer seller amount - platformfee
+        /// transfer seller amount - platformfee
         uint256 feeOnPlatform = ((sellerDetails.amount * platFormFeePercent) /
             100) * decimalPrecision;
 
@@ -159,13 +166,13 @@ contract FlatSale is Initializable, OwnableUpgradeable {
         }
     }
 
-    // Fallback function must be declared as external.
+    /// Fallback function must be declared as external.
     fallback() external payable {
-        // send / transfer (forwards 2300 gas to this fallback function)
-        // call (forwards all of the gas)
+        /// send / transfer (forwards 2300 gas to this fallback function)
+        /// call (forwards all of the gas)
     }
 
     receive() external payable {
-        // custom function code
+        /// custom function code
     }
 }
