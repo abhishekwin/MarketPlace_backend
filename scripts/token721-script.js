@@ -14,20 +14,13 @@ async function main() {
   // manually to make sure everything is compiled
   // await hre.run('compile');
 
-  // const MyNFT = await hre.ethers.getContractFactory("MyNFT");
-  // const myNFT = await MyNFT.deploy("500");
-
-  // await myNFT.deployed();
-
-  // console.log("MyNFT deployed to:", myNFT.address);
-
-  const MyNFT = await hre.ethers.getContractFactory("MyNFT");
-  const myNFT = await upgrades.deployProxy(MyNFT, [500], {
+  const ERC721Token = await hre.ethers.getContractFactory("ERC721Token");
+  const erc721Token = await upgrades.deployProxy(ERC721Token, [500], {
     initializer: "initialize",
   });
   
-  await myNFT.deployed();
-  console.log("MyNFT deployed to:", myNFT.address);
+  await erc721Token.deployed();
+  console.log("ERC721Token deployed to:", erc721Token.address);
 }
 // We recommend this pattern to be able to use async/await everywhere
 // and properly handle errors.

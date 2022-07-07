@@ -2,19 +2,19 @@
   "manifestVersion": "3.2",
   "admin": {
     "address": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
-    "txHash": "0x6c172741a874419b24eb7ff16eaf8741bbc6b6f09e05d6cb2861252310195e3c"
+    "txHash": "0xa586ebf884dc6ba57750d5bc2b96a74bcf908f61d59e95e5d580a4f88e681fdf"
   },
   "proxies": [
     {
       "address": "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
-      "txHash": "0xa09527d102eb49706b7deaee5a6389c36fe75bc69a97df45584c9330469e8bd8",
+      "txHash": "0x18c496ac2066dbfc2d7dd60fa65e3386cfdf1c02e65ef0dc1ed6bd0d5e5ab7ae",
       "kind": "transparent"
     }
   ],
   "impls": {
-    "09dfad8b9cb1c5f069a8c852b7e7376c9ec2da71b9140a7e4bb875b2d85425c4": {
+    "c6036a85d0f4cfda9c19d2e769e34787fca6565a0231e99e6f84d98eaa185648": {
       "address": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
-      "txHash": "0x1c513640e108845c020a95c50356bb4bd90a840bfbd4eac3a832a01e5804853f",
+      "txHash": "0xc7cc44c846490a173c1bf8b2f02136089abe89a85b2041bccb58c6cc7fa16005",
       "layout": {
         "storage": [
           {
@@ -247,7 +247,7 @@
             "offset": 0,
             "slot": "551",
             "type": "t_struct(Counter)2669_storage",
-            "contract": "MyNFT",
+            "contract": "ERC721Token",
             "src": "contracts/ERC721Token.sol:26"
           },
           {
@@ -255,7 +255,7 @@
             "offset": 0,
             "slot": "552",
             "type": "t_uint96",
-            "contract": "MyNFT",
+            "contract": "ERC721Token",
             "src": "contracts/ERC721Token.sol:28"
           }
         ],

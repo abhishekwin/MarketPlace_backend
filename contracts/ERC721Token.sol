@@ -1,4 +1,4 @@
-// contracts/MyNFT.sol
+
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
@@ -13,7 +13,7 @@ import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721Royalt
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
 
-contract MyNFT is
+contract ERC721Token is
     ERC721Upgradeable,
     OwnableUpgradeable,
     ERC721URIStorageUpgradeable,
@@ -48,8 +48,8 @@ contract MyNFT is
         string memory tokenURI,
         uint96 _royality
     ) external returns (uint256) {
-        require(_royality <= maximumRoyality, "MyNFT: Royality should be less");
-        require(address(to) != address(0), "MyNFT: to address can't be 0x0");
+        require(_royality <= maximumRoyality, "ERC721Token: Royality should be less");
+        require(address(to) != address(0), "ERC721Token: to address can't be 0x0");
         uint256 newItemId = _tokenIds.current();
 
         _mint(to, newItemId);
