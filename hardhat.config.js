@@ -26,19 +26,19 @@ module.exports = {
   solidity: "0.8.4",
   networks: {
   	rinkeby: {
-  		url: `https://ropsten.infura.io/v3/328ff9ac7ccf4b8b98de2b55b4047bd6`,
+  		url: `https://rinkeby.infura.io/v3/328ff9ac7ccf4b8b98de2b55b4047bd6`,
   		accounts: [`0x${Private_Key}`]
   	},
   },
   etherscan: {
     apiKey: {
-      rinkeby: ropsten_api_key,
+      rinkeby: rinkeby_api_key,
     }
   }
 }
 
   
 
-//0xb77a802Fd7d0c6628B4A664Ac8760e3E263B86E9 ropsten mytoken proxy per
-// 0x94fdc47621bd04798fe31e6ed280293f14d57b27  mytoken conrtract tem
+//0xfd67a1a3757b296c1ac016254f3be36adaaba6f6  ropsten mytoken proxy per
+// 0x57A5BC0ec9a36F2cf6d9d9e3e01133cF5BD33316  rinkeby
 // 0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0   localhost

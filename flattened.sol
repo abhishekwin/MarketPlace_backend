@@ -176,6 +176,7 @@ interface IERC721Upgradeable is IERC165Upgradeable {
 
 // File @openzeppelin/contracts-upgradeable/token/ERC721/IERC721ReceiverUpgradeable.sol@v4.6.0
 
+
 // OpenZeppelin Contracts (last updated v4.6.0) (token/ERC721/IERC721Receiver.sol)
 
 pragma solidity ^0.8.0;
@@ -206,6 +207,7 @@ interface IERC721ReceiverUpgradeable {
 
 // File @openzeppelin/contracts-upgradeable/token/ERC721/extensions/IERC721MetadataUpgradeable.sol@v4.6.0
 
+
 // OpenZeppelin Contracts v4.4.1 (token/ERC721/extensions/IERC721Metadata.sol)
 
 pragma solidity ^0.8.0;
@@ -233,6 +235,7 @@ interface IERC721MetadataUpgradeable is IERC721Upgradeable {
 
 
 // File @openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol@v4.6.0
+
 
 // OpenZeppelin Contracts (last updated v4.5.0) (utils/Address.sol)
 
@@ -432,6 +435,7 @@ library AddressUpgradeable {
 
 // File @openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol@v4.6.0
 
+
 // OpenZeppelin Contracts (last updated v4.6.0) (proxy/utils/Initializable.sol)
 
 pragma solidity ^0.8.2;
@@ -463,7 +467,7 @@ pragma solidity ^0.8.2;
  * ```
  *
  * TIP: To avoid leaving the proxy in an uninitialized state, the initializer function should be called as early as
- * possible by providing the encoded function call as the `_data` argument to {-conERC1967Proxystructor}.
+ * possible by providing the encoded function call as the `_data` argument to {ERC1967Proxy-constructor}.
  *
  * CAUTION: When used with inheritance, manual care must be taken to not invoke a parent initializer twice, or to ensure
  * that all initializers are idempotent. This is not verified automatically as constructors are by Solidity.
@@ -582,6 +586,7 @@ abstract contract Initializable {
 
 // File @openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol@v4.6.0
 
+
 // OpenZeppelin Contracts v4.4.1 (utils/Context.sol)
 
 pragma solidity ^0.8.0;
@@ -620,6 +625,7 @@ abstract contract ContextUpgradeable is Initializable {
 
 
 // File @openzeppelin/contracts-upgradeable/utils/StringsUpgradeable.sol@v4.6.0
+
 
 // OpenZeppelin Contracts v4.4.1 (utils/Strings.sol)
 
@@ -691,6 +697,7 @@ library StringsUpgradeable {
 
 // File @openzeppelin/contracts-upgradeable/utils/introspection/ERC165Upgradeable.sol@v4.6.0
 
+
 // OpenZeppelin Contracts v4.4.1 (utils/introspection/ERC165.sol)
 
 pragma solidity ^0.8.0;
@@ -733,6 +740,7 @@ abstract contract ERC165Upgradeable is Initializable, IERC165Upgradeable {
 
 
 // File @openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol@v4.6.0
+
 
 // OpenZeppelin Contracts (last updated v4.6.0) (token/ERC721/ERC721.sol)
 
@@ -1164,7 +1172,7 @@ contract ERC721Upgradeable is Initializable, ContextUpgradeable, ERC165Upgradeab
         address from,
         address to,
         uint256 tokenId
-    ) internal virtual {}
+    ) internal virtual  {}
 
     /**
      * @dev Hook that is called after any transfer of tokens. This includes
@@ -1193,6 +1201,7 @@ contract ERC721Upgradeable is Initializable, ContextUpgradeable, ERC165Upgradeab
 
 
 // File @openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721URIStorageUpgradeable.sol@v4.6.0
+
 
 // OpenZeppelin Contracts v4.4.1 (token/ERC721/extensions/ERC721URIStorage.sol)
 
@@ -1273,7 +1282,8 @@ abstract contract ERC721URIStorageUpgradeable is Initializable, ERC721Upgradeabl
 }
 
 
-// File @openzeppelin/contracts/utils/Counters.sol@v4.6.0
+// File @openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol@v4.6.0
+
 
 // OpenZeppelin Contracts v4.4.1 (utils/Counters.sol)
 
@@ -1287,7 +1297,7 @@ pragma solidity ^0.8.0;
  *
  * Include with `using Counters for Counters.Counter;`
  */
-library Counters {
+library CountersUpgradeable {
     struct Counter {
         // This variable should never be directly accessed by users of the library: interactions must be restricted to
         // the library's function. As of Solidity v0.5.2, this cannot be enforced, though there is a proposal to add
@@ -1319,57 +1329,819 @@ library Counters {
 }
 
 
-// File contracts/ERC721Token.sol
+// File @openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721BurnableUpgradeable.sol@v4.6.0
 
-// contracts/MyNFT.sol
+
+// OpenZeppelin Contracts v4.4.1 (token/ERC721/extensions/ERC721Burnable.sol)
+
+pragma solidity ^0.8.0;
+
+
+
+/**
+ * @title ERC721 Burnable Token
+ * @dev ERC721 Token that can be irreversibly burned (destroyed).
+ */
+abstract contract ERC721BurnableUpgradeable is Initializable, ContextUpgradeable, ERC721Upgradeable {
+    function __ERC721Burnable_init() internal onlyInitializing {
+    }
+
+    function __ERC721Burnable_init_unchained() internal onlyInitializing {
+    }
+    /**
+     * @dev Burns `tokenId`. See {ERC721-_burn}.
+     *
+     * Requirements:
+     *
+     * - The caller must own `tokenId` or be an approved operator.
+     */
+    function burn(uint256 tokenId) public virtual {
+        //solhint-disable-next-line max-line-length
+        require(_isApprovedOrOwner(_msgSender(), tokenId), "ERC721Burnable: caller is not owner nor approved");
+        _burn(tokenId);
+    }
+
+    /**
+     * @dev This empty reserved space is put in place to allow future versions to add new
+     * variables without shifting down storage in the inheritance chain.
+     * See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
+     */
+    uint256[50] private __gap;
+}
+
+
+// File @openzeppelin/contracts-upgradeable/token/ERC721/extensions/IERC721EnumerableUpgradeable.sol@v4.6.0
+
+
+// OpenZeppelin Contracts (last updated v4.5.0) (token/ERC721/extensions/IERC721Enumerable.sol)
+
+pragma solidity ^0.8.0;
+
+/**
+ * @title ERC-721 Non-Fungible Token Standard, optional enumeration extension
+ * @dev See https://eips.ethereum.org/EIPS/eip-721
+ */
+interface IERC721EnumerableUpgradeable is IERC721Upgradeable {
+    /**
+     * @dev Returns the total amount of tokens stored by the contract.
+     */
+    function totalSupply() external view returns (uint256);
+
+    /**
+     * @dev Returns a token ID owned by `owner` at a given `index` of its token list.
+     * Use along with {balanceOf} to enumerate all of ``owner``'s tokens.
+     */
+    function tokenOfOwnerByIndex(address owner, uint256 index) external view returns (uint256);
+
+    /**
+     * @dev Returns a token ID at a given `index` of all the tokens stored by the contract.
+     * Use along with {totalSupply} to enumerate all tokens.
+     */
+    function tokenByIndex(uint256 index) external view returns (uint256);
+}
+
+
+// File @openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol@v4.6.0
+
+
+// OpenZeppelin Contracts v4.4.1 (token/ERC721/extensions/ERC721Enumerable.sol)
+
+pragma solidity ^0.8.0;
+
+
+
+/**
+ * @dev This implements an optional extension of {ERC721} defined in the EIP that adds
+ * enumerability of all the token ids in the contract as well as all token ids owned by each
+ * account.
+ */
+abstract contract ERC721EnumerableUpgradeable is Initializable, ERC721Upgradeable, IERC721EnumerableUpgradeable {
+    function __ERC721Enumerable_init() internal onlyInitializing {
+    }
+
+    function __ERC721Enumerable_init_unchained() internal onlyInitializing {
+    }
+    // Mapping from owner to list of owned token IDs
+    mapping(address => mapping(uint256 => uint256)) private _ownedTokens;
+
+    // Mapping from token ID to index of the owner tokens list
+    mapping(uint256 => uint256) private _ownedTokensIndex;
+
+    // Array with all token ids, used for enumeration
+    uint256[] private _allTokens;
+
+    // Mapping from token id to position in the allTokens array
+    mapping(uint256 => uint256) private _allTokensIndex;
+
+    /**
+     * @dev See {IERC165-supportsInterface}.
+     */
+    function supportsInterface(bytes4 interfaceId) public view virtual override(IERC165Upgradeable, ERC721Upgradeable) returns (bool) {
+        return interfaceId == type(IERC721EnumerableUpgradeable).interfaceId || super.supportsInterface(interfaceId);
+    }
+
+    /**
+     * @dev See {IERC721Enumerable-tokenOfOwnerByIndex}.
+     */
+    function tokenOfOwnerByIndex(address owner, uint256 index) public view virtual override returns (uint256) {
+        require(index < ERC721Upgradeable.balanceOf(owner), "ERC721Enumerable: owner index out of bounds");
+        return _ownedTokens[owner][index];
+    }
+
+    /**
+     * @dev See {IERC721Enumerable-totalSupply}.
+     */
+    function totalSupply() public view virtual override returns (uint256) {
+        return _allTokens.length;
+    }
+
+    /**
+     * @dev See {IERC721Enumerable-tokenByIndex}.
+     */
+    function tokenByIndex(uint256 index) public view virtual override returns (uint256) {
+        require(index < ERC721EnumerableUpgradeable.totalSupply(), "ERC721Enumerable: global index out of bounds");
+        return _allTokens[index];
+    }
+
+    /**
+     * @dev Hook that is called before any token transfer. This includes minting
+     * and burning.
+     *
+     * Calling conditions:
+     *
+     * - When `from` and `to` are both non-zero, ``from``'s `tokenId` will be
+     * transferred to `to`.
+     * - When `from` is zero, `tokenId` will be minted for `to`.
+     * - When `to` is zero, ``from``'s `tokenId` will be burned.
+     * - `from` cannot be the zero address.
+     * - `to` cannot be the zero address.
+     *
+     * To learn more about hooks, head to xref:ROOT:extending-contracts.adoc#using-hooks[Using Hooks].
+     */
+    function _beforeTokenTransfer(
+        address from,
+        address to,
+        uint256 tokenId
+    ) internal virtual override {
+        super._beforeTokenTransfer(from, to, tokenId);
+
+        if (from == address(0)) {
+            _addTokenToAllTokensEnumeration(tokenId);
+        } else if (from != to) {
+            _removeTokenFromOwnerEnumeration(from, tokenId);
+        }
+        if (to == address(0)) {
+            _removeTokenFromAllTokensEnumeration(tokenId);
+        } else if (to != from) {
+            _addTokenToOwnerEnumeration(to, tokenId);
+        }
+    }
+
+    /**
+     * @dev Private function to add a token to this extension's ownership-tracking data structures.
+     * @param to address representing the new owner of the given token ID
+     * @param tokenId uint256 ID of the token to be added to the tokens list of the given address
+     */
+    function _addTokenToOwnerEnumeration(address to, uint256 tokenId) private {
+        uint256 length = ERC721Upgradeable.balanceOf(to);
+        _ownedTokens[to][length] = tokenId;
+        _ownedTokensIndex[tokenId] = length;
+    }
+
+    /**
+     * @dev Private function to add a token to this extension's token tracking data structures.
+     * @param tokenId uint256 ID of the token to be added to the tokens list
+     */
+    function _addTokenToAllTokensEnumeration(uint256 tokenId) private {
+        _allTokensIndex[tokenId] = _allTokens.length;
+        _allTokens.push(tokenId);
+    }
+
+    /**
+     * @dev Private function to remove a token from this extension's ownership-tracking data structures. Note that
+     * while the token is not assigned a new owner, the `_ownedTokensIndex` mapping is _not_ updated: this allows for
+     * gas optimizations e.g. when performing a transfer operation (avoiding double writes).
+     * This has O(1) time complexity, but alters the order of the _ownedTokens array.
+     * @param from address representing the previous owner of the given token ID
+     * @param tokenId uint256 ID of the token to be removed from the tokens list of the given address
+     */
+    function _removeTokenFromOwnerEnumeration(address from, uint256 tokenId) private {
+        // To prevent a gap in from's tokens array, we store the last token in the index of the token to delete, and
+        // then delete the last slot (swap and pop).
+
+        uint256 lastTokenIndex = ERC721Upgradeable.balanceOf(from) - 1;
+        uint256 tokenIndex = _ownedTokensIndex[tokenId];
+
+        // When the token to delete is the last token, the swap operation is unnecessary
+        if (tokenIndex != lastTokenIndex) {
+            uint256 lastTokenId = _ownedTokens[from][lastTokenIndex];
+
+            _ownedTokens[from][tokenIndex] = lastTokenId; // Move the last token to the slot of the to-delete token
+            _ownedTokensIndex[lastTokenId] = tokenIndex; // Update the moved token's index
+        }
+
+        // This also deletes the contents at the last position of the array
+        delete _ownedTokensIndex[tokenId];
+        delete _ownedTokens[from][lastTokenIndex];
+    }
+
+    /**
+     * @dev Private function to remove a token from this extension's token tracking data structures.
+     * This has O(1) time complexity, but alters the order of the _allTokens array.
+     * @param tokenId uint256 ID of the token to be removed from the tokens list
+     */
+    function _removeTokenFromAllTokensEnumeration(uint256 tokenId) private {
+        // To prevent a gap in the tokens array, we store the last token in the index of the token to delete, and
+        // then delete the last slot (swap and pop).
+
+        uint256 lastTokenIndex = _allTokens.length - 1;
+        uint256 tokenIndex = _allTokensIndex[tokenId];
+
+        // When the token to delete is the last token, the swap operation is unnecessary. However, since this occurs so
+        // rarely (when the last minted token is burnt) that we still do the swap here to avoid the gas cost of adding
+        // an 'if' statement (like in _removeTokenFromOwnerEnumeration)
+        uint256 lastTokenId = _allTokens[lastTokenIndex];
+
+        _allTokens[tokenIndex] = lastTokenId; // Move the last token to the slot of the to-delete token
+        _allTokensIndex[lastTokenId] = tokenIndex; // Update the moved token's index
+
+        // This also deletes the contents at the last position of the array
+        delete _allTokensIndex[tokenId];
+        _allTokens.pop();
+    }
+
+    /**
+     * @dev This empty reserved space is put in place to allow future versions to add new
+     * variables without shifting down storage in the inheritance chain.
+     * See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
+     */
+    uint256[46] private __gap;
+}
+
+
+// File @openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol@v4.6.0
+
+
+// OpenZeppelin Contracts v4.4.1 (security/Pausable.sol)
+
+pragma solidity ^0.8.0;
+
+
+/**
+ * @dev Contract module which allows children to implement an emergency stop
+ * mechanism that can be triggered by an authorized account.
+ *
+ * This module is used through inheritance. It will make available the
+ * modifiers `whenNotPaused` and `whenPaused`, which can be applied to
+ * the functions of your contract. Note that they will not be pausable by
+ * simply including this module, only once the modifiers are put in place.
+ */
+abstract contract PausableUpgradeable is Initializable, ContextUpgradeable {
+    /**
+     * @dev Emitted when the pause is triggered by `account`.
+     */
+    event Paused(address account);
+
+    /**
+     * @dev Emitted when the pause is lifted by `account`.
+     */
+    event Unpaused(address account);
+
+    bool private _paused;
+
+    /**
+     * @dev Initializes the contract in unpaused state.
+     */
+    function __Pausable_init() internal onlyInitializing {
+        __Pausable_init_unchained();
+    }
+
+    function __Pausable_init_unchained() internal onlyInitializing {
+        _paused = false;
+    }
+
+    /**
+     * @dev Returns true if the contract is paused, and false otherwise.
+     */
+    function paused() public view virtual returns (bool) {
+        return _paused;
+    }
+
+    /**
+     * @dev Modifier to make a function callable only when the contract is not paused.
+     *
+     * Requirements:
+     *
+     * - The contract must not be paused.
+     */
+    modifier whenNotPaused() {
+        require(!paused(), "Pausable: paused");
+        _;
+    }
+
+    /**
+     * @dev Modifier to make a function callable only when the contract is paused.
+     *
+     * Requirements:
+     *
+     * - The contract must be paused.
+     */
+    modifier whenPaused() {
+        require(paused(), "Pausable: not paused");
+        _;
+    }
+
+    /**
+     * @dev Triggers stopped state.
+     *
+     * Requirements:
+     *
+     * - The contract must not be paused.
+     */
+    function _pause() internal virtual whenNotPaused {
+        _paused = true;
+        emit Paused(_msgSender());
+    }
+
+    /**
+     * @dev Returns to normal state.
+     *
+     * Requirements:
+     *
+     * - The contract must be paused.
+     */
+    function _unpause() internal virtual whenPaused {
+        _paused = false;
+        emit Unpaused(_msgSender());
+    }
+
+    /**
+     * @dev This empty reserved space is put in place to allow future versions to add new
+     * variables without shifting down storage in the inheritance chain.
+     * See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
+     */
+    uint256[49] private __gap;
+}
+
+
+// File @openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721PausableUpgradeable.sol@v4.6.0
+
+
+// OpenZeppelin Contracts v4.4.1 (token/ERC721/extensions/ERC721Pausable.sol)
+
+pragma solidity ^0.8.0;
+
+
+
+/**
+ * @dev ERC721 token with pausable token transfers, minting and burning.
+ *
+ * Useful for scenarios such as preventing trades until the end of an evaluation
+ * period, or having an emergency switch for freezing all token transfers in the
+ * event of a large bug.
+ */
+abstract contract ERC721PausableUpgradeable is Initializable, ERC721Upgradeable, PausableUpgradeable {
+    function __ERC721Pausable_init() internal onlyInitializing {
+        __Pausable_init_unchained();
+    }
+
+    function __ERC721Pausable_init_unchained() internal onlyInitializing {
+    }
+    /**
+     * @dev See {ERC721-_beforeTokenTransfer}.
+     *
+     * Requirements:
+     *
+     * - the contract must not be paused.
+     */
+    function _beforeTokenTransfer(
+        address from,
+        address to,
+        uint256 tokenId
+    ) internal virtual override {
+        super._beforeTokenTransfer(from, to, tokenId);
+
+        require(!paused(), "ERC721Pausable: token transfer while paused");
+    }
+
+    /**
+     * @dev This empty reserved space is put in place to allow future versions to add new
+     * variables without shifting down storage in the inheritance chain.
+     * See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
+     */
+    uint256[50] private __gap;
+}
+
+
+// File @openzeppelin/contracts-upgradeable/interfaces/IERC2981Upgradeable.sol@v4.6.0
+
+
+// OpenZeppelin Contracts (last updated v4.6.0) (interfaces/IERC2981.sol)
+
+pragma solidity ^0.8.0;
+
+/**
+ * @dev Interface for the NFT Royalty Standard.
+ *
+ * A standardized way to retrieve royalty payment information for non-fungible tokens (NFTs) to enable universal
+ * support for royalty payments across all NFT marketplaces and ecosystem participants.
+ *
+ * _Available since v4.5._
+ */
+interface IERC2981Upgradeable is IERC165Upgradeable {
+    /**
+     * @dev Returns how much royalty is owed and to whom, based on a sale price that may be denominated in any unit of
+     * exchange. The royalty amount is denominated and should be paid in that same unit of exchange.
+     */
+    function royaltyInfo(uint256 tokenId, uint256 salePrice)
+        external
+        view
+        returns (address receiver, uint256 royaltyAmount);
+}
+
+
+// File @openzeppelin/contracts-upgradeable/token/common/ERC2981Upgradeable.sol@v4.6.0
+
+
+// OpenZeppelin Contracts (last updated v4.6.0) (token/common/ERC2981.sol)
+
+pragma solidity ^0.8.0;
+
+
+
+/**
+ * @dev Implementation of the NFT Royalty Standard, a standardized way to retrieve royalty payment information.
+ *
+ * Royalty information can be specified globally for all token ids via {_setDefaultRoyalty}, and/or individually for
+ * specific token ids via {_setTokenRoyalty}. The latter takes precedence over the first.
+ *
+ * Royalty is specified as a fraction of sale price. {_feeDenominator} is overridable but defaults to 10000, meaning the
+ * fee is specified in basis points by default.
+ *
+ * IMPORTANT: ERC-2981 only specifies a way to signal royalty information and does not enforce its payment. See
+ * https://eips.ethereum.org/EIPS/eip-2981#optional-royalty-payments[Rationale] in the EIP. Marketplaces are expected to
+ * voluntarily pay royalties together with sales, but note that this standard is not yet widely supported.
+ *
+ * _Available since v4.5._
+ */
+abstract contract ERC2981Upgradeable is Initializable, IERC2981Upgradeable, ERC165Upgradeable {
+    function __ERC2981_init() internal onlyInitializing {
+    }
+
+    function __ERC2981_init_unchained() internal onlyInitializing {
+    }
+    struct RoyaltyInfo {
+        address receiver;
+        uint96 royaltyFraction;
+    }
+
+    RoyaltyInfo private _defaultRoyaltyInfo;
+    mapping(uint256 => RoyaltyInfo) private _tokenRoyaltyInfo;
+
+    /**
+     * @dev See {IERC165-supportsInterface}.
+     */
+    function supportsInterface(bytes4 interfaceId) public view virtual override(IERC165Upgradeable, ERC165Upgradeable) returns (bool) {
+        return interfaceId == type(IERC2981Upgradeable).interfaceId || super.supportsInterface(interfaceId);
+    }
+
+    /**
+     * @inheritdoc IERC2981Upgradeable
+     */
+    function royaltyInfo(uint256 _tokenId, uint256 _salePrice) public view virtual override returns (address, uint256) {
+        RoyaltyInfo memory royalty = _tokenRoyaltyInfo[_tokenId];
+
+        if (royalty.receiver == address(0)) {
+            royalty = _defaultRoyaltyInfo;
+        }
+
+        uint256 royaltyAmount = (_salePrice * royalty.royaltyFraction) / _feeDenominator();
+
+        return (royalty.receiver, royaltyAmount);
+    }
+
+    /**
+     * @dev The denominator with which to interpret the fee set in {_setTokenRoyalty} and {_setDefaultRoyalty} as a
+     * fraction of the sale price. Defaults to 10000 so fees are expressed in basis points, but may be customized by an
+     * override.
+     */
+    function _feeDenominator() internal pure virtual returns (uint96) {
+        return 10000;
+    }
+
+    /**
+     * @dev Sets the royalty information that all ids in this contract will default to.
+     *
+     * Requirements:
+     *
+     * - `receiver` cannot be the zero address.
+     * - `feeNumerator` cannot be greater than the fee denominator.
+     */
+    function _setDefaultRoyalty(address receiver, uint96 feeNumerator) internal virtual {
+        require(feeNumerator <= _feeDenominator(), "ERC2981: royalty fee will exceed salePrice");
+        require(receiver != address(0), "ERC2981: invalid receiver");
+
+        _defaultRoyaltyInfo = RoyaltyInfo(receiver, feeNumerator);
+    }
+
+    /**
+     * @dev Removes default royalty information.
+     */
+    function _deleteDefaultRoyalty() internal virtual {
+        delete _defaultRoyaltyInfo;
+    }
+
+    /**
+     * @dev Sets the royalty information for a specific token id, overriding the global default.
+     *
+     * Requirements:
+     *
+     * - `tokenId` must be already minted.
+     * - `receiver` cannot be the zero address.
+     * - `feeNumerator` cannot be greater than the fee denominator.
+     */
+    function _setTokenRoyalty(
+        uint256 tokenId,
+        address receiver,
+        uint96 feeNumerator
+    ) internal virtual {
+        require(feeNumerator <= _feeDenominator(), "ERC2981: royalty fee will exceed salePrice");
+        require(receiver != address(0), "ERC2981: Invalid parameters");
+
+        _tokenRoyaltyInfo[tokenId] = RoyaltyInfo(receiver, feeNumerator);
+    }
+
+    /**
+     * @dev Resets royalty information for the token id back to the global default.
+     */
+    function _resetTokenRoyalty(uint256 tokenId) internal virtual {
+        delete _tokenRoyaltyInfo[tokenId];
+    }
+
+    /**
+     * @dev This empty reserved space is put in place to allow future versions to add new
+     * variables without shifting down storage in the inheritance chain.
+     * See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
+     */
+    uint256[48] private __gap;
+}
+
+
+// File @openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721RoyaltyUpgradeable.sol@v4.6.0
+
+
+// OpenZeppelin Contracts (last updated v4.5.0) (token/ERC721/extensions/ERC721Royalty.sol)
+
 pragma solidity ^0.8.0;
 
 
 
 
-contract MyNFT is ERC721URIStorageUpgradeable {
-    using Counters for Counters.Counter;
-    Counters.Counter private _tokenIds;
-     
-    mapping(uint256 => uint256) public royality; //tokenId=>royality
-    mapping(uint256=> address) public creator; //tokenId=>address creator
-    uint256 public maximumRoyality;    //Set the maximum Royality.
+/**
+ * @dev Extension of ERC721 with the ERC2981 NFT Royalty Standard, a standardized way to retrieve royalty payment
+ * information.
+ *
+ * Royalty information can be specified globally for all token ids via {_setDefaultRoyalty}, and/or individually for
+ * specific token ids via {_setTokenRoyalty}. The latter takes precedence over the first.
+ *
+ * IMPORTANT: ERC-2981 only specifies a way to signal royalty information and does not enforce its payment. See
+ * https://eips.ethereum.org/EIPS/eip-2981#optional-royalty-payments[Rationale] in the EIP. Marketplaces are expected to
+ * voluntarily pay royalties together with sales, but note that this standard is not yet widely supported.
+ *
+ * _Available since v4.5._
+ */
+abstract contract ERC721RoyaltyUpgradeable is Initializable, ERC2981Upgradeable, ERC721Upgradeable {
+    function __ERC721Royalty_init() internal onlyInitializing {
+    }
 
-    function initialize(uint256 _maxRoyality)  initializer  public{
-        __ERC721_init("Abhi" ,"Shake");
-      
+    function __ERC721Royalty_init_unchained() internal onlyInitializing {
+    }
+    /**
+     * @dev See {IERC165-supportsInterface}.
+     */
+    function supportsInterface(bytes4 interfaceId) public view virtual override(ERC721Upgradeable, ERC2981Upgradeable) returns (bool) {
+        return super.supportsInterface(interfaceId);
+    }
+
+    /**
+     * @dev See {ERC721-_burn}. This override additionally clears the royalty information for the token.
+     */
+    function _burn(uint256 tokenId) internal virtual override {
+        super._burn(tokenId);
+        _resetTokenRoyalty(tokenId);
+    }
+
+    /**
+     * @dev This empty reserved space is put in place to allow future versions to add new
+     * variables without shifting down storage in the inheritance chain.
+     * See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
+     */
+    uint256[50] private __gap;
+}
+
+
+// File @openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol@v4.6.0
+
+
+// OpenZeppelin Contracts v4.4.1 (access/Ownable.sol)
+
+pragma solidity ^0.8.0;
+
+
+/**
+ * @dev Contract module which provides a basic access control mechanism, where
+ * there is an account (an owner) that can be granted exclusive access to
+ * specific functions.
+ *
+ * By default, the owner account will be the one that deploys the contract. This
+ * can later be changed with {transferOwnership}.
+ *
+ * This module is used through inheritance. It will make available the modifier
+ * `onlyOwner`, which can be applied to your functions to restrict their use to
+ * the owner.
+ */
+abstract contract OwnableUpgradeable is Initializable, ContextUpgradeable {
+    address private _owner;
+
+    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
+
+    /**
+     * @dev Initializes the contract setting the deployer as the initial owner.
+     */
+    function __Ownable_init() internal onlyInitializing {
+        __Ownable_init_unchained();
+    }
+
+    function __Ownable_init_unchained() internal onlyInitializing {
+        _transferOwnership(_msgSender());
+    }
+
+    /**
+     * @dev Returns the address of the current owner.
+     */
+    function owner() public view virtual returns (address) {
+        return _owner;
+    }
+
+    /**
+     * @dev Throws if called by any account other than the owner.
+     */
+    modifier onlyOwner() {
+        require(owner() == _msgSender(), "Ownable: caller is not the owner");
+        _;
+    }
+
+    /**
+     * @dev Leaves the contract without owner. It will not be possible to call
+     * `onlyOwner` functions anymore. Can only be called by the current owner.
+     *
+     * NOTE: Renouncing ownership will leave the contract without an owner,
+     * thereby removing any functionality that is only available to the owner.
+     */
+    function renounceOwnership() public virtual onlyOwner {
+        _transferOwnership(address(0));
+    }
+
+    /**
+     * @dev Transfers ownership of the contract to a new account (`newOwner`).
+     * Can only be called by the current owner.
+     */
+    function transferOwnership(address newOwner) public virtual onlyOwner {
+        require(newOwner != address(0), "Ownable: new owner is the zero address");
+        _transferOwnership(newOwner);
+    }
+
+    /**
+     * @dev Transfers ownership of the contract to a new account (`newOwner`).
+     * Internal function without access restriction.
+     */
+    function _transferOwnership(address newOwner) internal virtual {
+        address oldOwner = _owner;
+        _owner = newOwner;
+        emit OwnershipTransferred(oldOwner, newOwner);
+    }
+
+    /**
+     * @dev This empty reserved space is put in place to allow future versions to add new
+     * variables without shifting down storage in the inheritance chain.
+     * See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
+     */
+    uint256[49] private __gap;
+}
+
+
+// File contracts/ERC721Token.sol
+
+// contracts/MyNFT.sol
+
+pragma solidity ^0.8.0;
+
+
+
+
+
+
+
+
+
+contract MyNFT is
+    ERC721Upgradeable,
+    OwnableUpgradeable,
+    ERC721URIStorageUpgradeable,
+    ERC721BurnableUpgradeable,
+    ERC721EnumerableUpgradeable,
+    ERC721PausableUpgradeable,
+    ERC721RoyaltyUpgradeable
+{
+    using CountersUpgradeable for CountersUpgradeable.Counter;
+    CountersUpgradeable.Counter private _tokenIds;
+
+    uint96 public maximumRoyality; //Set the maximum Royality.
+
+    function initialize(uint96 _maxRoyality) public initializer {
+        __ERC721_init("MarketPlace", "MKP");
+        __Ownable_init();
         _tokenIds.increment();
+
         maximumRoyality = _maxRoyality;
     }
-    //    /**
-    //  * @dev Abhishek Kothiya
-    //  * @notice This Function is used to Mint NFT.
-    //  * @param to: Address who get NFT.
-    //  * @param tokenURI: NFT String URI.
-    //  * @param royality: Percentage of creator.
-    //  **/
-   
+
+    /**
+     * @dev Method to mint nft This Function is used to Mint NFT.
+     * @notice  This method is used to Mint NFT.
+     * @param to: Address who get NFT.
+     * @param tokenURI: NFT String URI.
+     * @param _royality: Percentage of creator.
+     */
+
     function mint(
         address to,
-        address _creator,
         string memory tokenURI,
-        uint256 _royality
-    )   public returns (uint256) {
-        
-        require( _royality<=maximumRoyality,"Royality should be less" );
-        require(address(to)!=address(0),"Token contract: to address can't be 0x0");
+        uint96 _royality
+    ) external returns (uint256) {
+        require(_royality <= maximumRoyality, "MyNFT: Royality should be less");
+        require(address(to) != address(0), "MyNFT: to address can't be 0x0");
         uint256 newItemId = _tokenIds.current();
-        
+
         _mint(to, newItemId);
         _setTokenURI(newItemId, tokenURI);
-        setCreator(_creator,newItemId);
+        _setTokenRoyalty(newItemId, to, _royality);
         _tokenIds.increment();
-        royality[newItemId] = _royality;
 
         return newItemId;
     }
 
-    function setCreator(address _creator,uint256 tokenId)  internal {
-        creator[tokenId] =_creator;
+    function setMaximumRoyality(uint96 _value) external onlyOwner {
+        maximumRoyality = _value;
+    }
+
+    function _beforeTokenTransfer(
+        address from,
+        address to,
+        uint256 tokenId
+    )
+        internal
+        virtual
+        override(
+            ERC721EnumerableUpgradeable,
+            ERC721PausableUpgradeable,
+            ERC721Upgradeable
+        )
+    {}
+
+    function _burn(uint256 tokenId)
+        internal
+        virtual
+        override(
+            ERC721RoyaltyUpgradeable,
+            ERC721URIStorageUpgradeable,
+            ERC721Upgradeable
+        )
+    {
+        return super._burn(tokenId);
+    }
+
+    function supportsInterface(bytes4 interfaceId)
+        public
+        view
+        virtual
+        override(
+            ERC721EnumerableUpgradeable,
+            ERC721RoyaltyUpgradeable,
+            ERC721Upgradeable
+        )
+        returns (bool)
+    {
+        return super.supportsInterface(interfaceId);
+    }
+
+    function tokenURI(uint256 tokenId)
+        public
+        view
+        virtual
+        override(ERC721URIStorageUpgradeable, ERC721Upgradeable)
+        returns (string memory)
+    {
+        return super.tokenURI(tokenId);
     }
 }

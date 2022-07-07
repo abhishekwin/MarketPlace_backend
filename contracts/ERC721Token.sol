@@ -12,6 +12,7 @@ import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721Pausab
 import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721RoyaltyUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
+
 contract MyNFT is
     ERC721Upgradeable,
     OwnableUpgradeable,
@@ -112,4 +113,6 @@ contract MyNFT is
     {
         return super.tokenURI(tokenId);
     }
+
+
 }

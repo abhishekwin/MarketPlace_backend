@@ -87,7 +87,7 @@ describe("MyNFT", () => {
   });
 
   describe("Checking that getApproved function", () => {
-    it("Should check tokenId address", async () => {
+    it("Should check tokenId approved or not", async () => {
       await expect(
         myNFT.connect(add1.address).getApproved(2)
       ).to.be.revertedWith("ERC721: approved query for nonexistent token");

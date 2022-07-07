@@ -887,8 +887,8 @@
       ]
     },
     "/Users/dr.mac/Desktop/blockchain-project/Marketplace/contracts/ERC721Token.sol": {
-      "lastModificationDate": 1657114573265,
-      "contentHash": "71587234567b232a4407a07676147069",
+      "lastModificationDate": 1657176526169,
+      "contentHash": "7fe608e2e6b4e0349ca73326d5617e20",
       "sourceName": "contracts/ERC721Token.sol",
       "solcConfig": {
         "version": "0.8.4",
