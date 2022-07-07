@@ -9,6 +9,7 @@ contract MyNFT is ERC721URIStorage {
     Counters.Counter private _tokenIds;
 
     mapping(uint256 => uint256) public royality; //tokenId=>royality
+
     uint256 public maximumRoyality; //Set the maximum Royality.
 
     constructor(uint256 _maxRoyality) ERC721("Iam", "Win") {
@@ -18,14 +19,25 @@ contract MyNFT is ERC721URIStorage {
 
     function mint(
         address to,
+        address creator,
         string memory tokenURI,
         uint256 _royality
     ) public returns (uint256) {
+        require(
+            address(to) != address(0),
+            "Token contract: to address can't be 0x0"
+        );
         uint256 newItemId = _tokenIds.current();
         _mint(to, newItemId);
         _setTokenURI(newItemId, tokenURI);
         _tokenIds.increment();
         royality[newItemId] = _royality;
         return newItemId;
+    }
+
+    // Fallback function must be declared as external.
+    fallback() external payable {
+        // send / transfer (forwards 2300 gas to this fallback function)
+        // call (forwards all of the gas)
     }
 }
