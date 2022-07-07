@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "name": "hardhat-project",
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.6",
@@ -15,4 +16,31 @@
     "@openzeppelin/contracts-upgradeable": "^4.7.0",
     "ganache": "^7.3.1"
   }
+=======
+  "dependencies": {
+    "@nomiclabs/hardhat-etherscan": "^3.1.0",
+    "@openzeppelin/contracts": "^4.6.0",
+    "@openzeppelin/contracts-upgradeable": "^4.6.0",
+    "@openzeppelin/hardhat-upgrades": "^1.19.0",
+    "@openzeppelin/upgrades": "^2.8.0"
+  },
+  "name": "contract",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {
+    "@nomiclabs/hardhat-ethers": "^2.0.6",
+    "@nomiclabs/hardhat-waffle": "^2.0.3",
+    "chai": "^4.3.6",
+    "ethereum-waffle": "^3.4.4",
+    "ethers": "^5.6.8",
+    "hardhat": "^2.9.9"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+>>>>>>> 1f47f51acdc4691060787c03209b4f4e66364eaa
 }
