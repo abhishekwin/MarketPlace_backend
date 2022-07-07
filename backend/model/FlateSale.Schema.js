@@ -25,7 +25,20 @@ const flateSaleSchema = new mongoose.Schema({
     },
     nonce:{
         type:String,
+    },
+    uri:{
+        type:String,
+    },
+    nft__name:{
+        type:String,
+    },
+    nft__Description:{
+        type:String,
+    },
+    royalty:{
+        type:Number,
     }
+    
 
 
 });

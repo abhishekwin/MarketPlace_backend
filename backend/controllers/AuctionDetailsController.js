@@ -11,9 +11,14 @@ exports.create_post = async function(req,resp){
 };
 
 
-exports.get_post = async function(req,resp){
+exports.get_posts = async function(req,resp){
 
     const data = await AuctionDetailsSchema.find();
+    resp.send(data);
+};
+exports.get_post = async function(req,resp){
+
+    const data = await AuctionDetailsSchema.findOne(req.params);
     resp.send(data);
 };
 

@@ -1,18 +1,9 @@
-import { ConnectWallet, Dashboard,Footer,Header,NftDetails,NftList } from "./components";
+import logo from './logo.svg';
+import './App.css';
+import Layout from './components/Layout/Layout';
 
 function App() {
-  return (
-    <div>
-      <h1>Hello world</h1>
-      
-      <ConnectWallet />
-      <Dashboard/>
-      <Footer/>
-      <Header/>
-      <NftDetails/>
-      <NftList/>
-    </div>
-  );
+  return <Layout/>
 }
 
 export default App;
