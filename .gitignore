@@ -1,20 +1,9 @@
-<<<<<<< HEAD
-node_modules
-=======
 /node_modules
->>>>>>> 1f47f51acdc4691060787c03209b4f4e66364eaa
 .env
 coverage
 coverage.json
 typechain
-<<<<<<< HEAD
-
-#Hardhat files
-cache
-artifacts
-=======
 #Hardhat files
 cache
 artifacts
 .openzepplin
->>>>>>> 1f47f51acdc4691060787c03209b4f4e66364eaa

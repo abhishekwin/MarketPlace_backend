@@ -23,7 +23,28 @@ module.exports = {
 
 
 
-  solidity: "0.8.4",
+  solidity: {
+    compilers: [
+      {
+        version: "0.8.14",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 200,
+          },
+        },
+      },
+      {
+        version: "0.4.18",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 200
+          }
+        },
+      }
+    ],
+  },
   networks: {
     rinkeby: {
       url: `https://rinkeby.infura.io/v3/328ff9ac7ccf4b8b98de2b55b4047bd6`,
