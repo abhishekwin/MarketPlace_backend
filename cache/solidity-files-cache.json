@@ -1,10 +1,10 @@
 {
   "_format": "hh-sol-cache-2",
   "files": {
-    "/Users/dr.mac/Desktop/blockchain-projects/Marketplace/contracts/auction.sol": {
-      "lastModificationDate": 1657178827637,
-      "contentHash": "7fd5f43fbdf06ca71d8ee1ef099675b9",
-      "sourceName": "contracts/auction.sol",
+    "/Users/dr.mac/Desktop/blockchain-projects/Marketplace/contracts/Auction.sol": {
+      "lastModificationDate": 1657550319741,
+      "contentHash": "b77aa69c25acd6ea5099f3af989e38c9",
+      "sourceName": "contracts/Auction.sol",
       "solcConfig": {
         "version": "0.8.2",
         "settings": {
@@ -35,7 +35,9 @@
         "contracts/mocks/interfaces/IERC721Mint.sol",
         "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol",
         "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol",
-        "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol"
+        "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol",
+        "hardhat/console.sol",
+        "@openzeppelin/contracts-upgradeable/utils/math/SafeMathUpgradeable.sol"
       ],
       "versionPragmas": [
         "^0.8.0"
@@ -45,7 +47,7 @@
       ]
     },
     "/Users/dr.mac/Desktop/blockchain-projects/Marketplace/node_modules/@openzeppelin/contracts-upgradeable/token/ERC721/IERC721Upgradeable.sol": {
-      "lastModificationDate": 1657175438497,
+      "lastModificationDate": 1657192765911,
       "contentHash": "59feb5948371a5644b37b0ea697968a2",
       "sourceName": "@openzeppelin/contracts-upgradeable/token/ERC721/IERC721Upgradeable.sol",
       "solcConfig": {
@@ -83,7 +85,7 @@
       ]
     },
     "/Users/dr.mac/Desktop/blockchain-projects/Marketplace/node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol": {
-      "lastModificationDate": 1657178895482,
+      "lastModificationDate": 1657192765855,
       "contentHash": "ad7c2d0af148c8f9f097d65deeb4da6b",
       "sourceName": "@openzeppelin/contracts/token/ERC20/IERC20.sol",
       "solcConfig": {
@@ -119,8 +121,8 @@
       ]
     },
     "/Users/dr.mac/Desktop/blockchain-projects/Marketplace/contracts/mocks/interfaces/IERC721Mint.sol": {
-      "lastModificationDate": 1657178827630,
-      "contentHash": "3093af1f062f199bda679b89bf951474",
+      "lastModificationDate": 1657549856084,
+      "contentHash": "0323d50915775c5570003f68a1e1e3e4",
       "sourceName": "contracts/mocks/interfaces/IERC721Mint.sol",
       "solcConfig": {
         "version": "0.8.2",
@@ -157,7 +159,7 @@
       ]
     },
     "/Users/dr.mac/Desktop/blockchain-projects/Marketplace/node_modules/@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol": {
-      "lastModificationDate": 1657175438489,
+      "lastModificationDate": 1657192765971,
       "contentHash": "b98e2f3a856e6e7f2106fb919bacab9e",
       "sourceName": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol",
       "solcConfig": {
@@ -195,7 +197,7 @@
       ]
     },
     "/Users/dr.mac/Desktop/blockchain-projects/Marketplace/node_modules/@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol": {
-      "lastModificationDate": 1657178895734,
+      "lastModificationDate": 1657192766151,
       "contentHash": "ea48b4a63fd733eec048191be006daa8",
       "sourceName": "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol",
       "solcConfig": {
@@ -233,7 +235,7 @@
       ]
     },
     "/Users/dr.mac/Desktop/blockchain-projects/Marketplace/node_modules/@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol": {
-      "lastModificationDate": 1657175438446,
+      "lastModificationDate": 1657192766025,
       "contentHash": "403ce8273abde646bff81558ddf512ad",
       "sourceName": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol",
       "solcConfig": {
@@ -271,8 +273,44 @@
         "OwnableUpgradeable"
       ]
     },
+    "/Users/dr.mac/Desktop/blockchain-projects/Marketplace/node_modules/hardhat/console.sol": {
+      "lastModificationDate": 1657192767196,
+      "contentHash": "cc4777addd464ea56fa35b1c45df0591",
+      "sourceName": "hardhat/console.sol",
+      "solcConfig": {
+        "version": "0.8.2",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        ">=0.4.22 <0.9.0"
+      ],
+      "artifacts": [
+        "console"
+      ]
+    },
     "/Users/dr.mac/Desktop/blockchain-projects/Marketplace/node_modules/@openzeppelin/contracts-upgradeable/utils/introspection/IERC165Upgradeable.sol": {
-      "lastModificationDate": 1657175438508,
+      "lastModificationDate": 1657192765845,
       "contentHash": "d6ecf203a5e72c845be9bbf2f304a289",
       "sourceName": "@openzeppelin/contracts-upgradeable/utils/introspection/IERC165Upgradeable.sol",
       "solcConfig": {
@@ -308,7 +346,7 @@
       ]
     },
     "/Users/dr.mac/Desktop/blockchain-projects/Marketplace/node_modules/@openzeppelin/contracts/token/ERC721/IERC721.sol": {
-      "lastModificationDate": 1657178895496,
+      "lastModificationDate": 1657192765878,
       "contentHash": "ec99d946db3685a3630554aa6055bd7f",
       "sourceName": "@openzeppelin/contracts/token/ERC721/IERC721.sol",
       "solcConfig": {
@@ -346,7 +384,7 @@
       ]
     },
     "/Users/dr.mac/Desktop/blockchain-projects/Marketplace/node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol": {
-      "lastModificationDate": 1657178895472,
+      "lastModificationDate": 1657192765842,
       "contentHash": "03e6768535ac4da0e9756f1d8a4a018a",
       "sourceName": "@openzeppelin/contracts/utils/introspection/IERC165.sol",
       "solcConfig": {
@@ -382,7 +420,7 @@
       ]
     },
     "/Users/dr.mac/Desktop/blockchain-projects/Marketplace/node_modules/@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol": {
-      "lastModificationDate": 1657175438501,
+      "lastModificationDate": 1657192764926,
       "contentHash": "d42e87f4fba2b03ab4d3c14cb53d0c51",
       "sourceName": "@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol",
       "solcConfig": {
@@ -418,7 +456,7 @@
       ]
     },
     "/Users/dr.mac/Desktop/blockchain-projects/Marketplace/node_modules/@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol": {
-      "lastModificationDate": 1657178895166,
+      "lastModificationDate": 1657192765394,
       "contentHash": "3fc3c7c0a2956f36e766691bb9473b06",
       "sourceName": "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol",
       "solcConfig": {
@@ -457,7 +495,7 @@
       ]
     },
     "/Users/dr.mac/Desktop/blockchain-projects/Marketplace/node_modules/@openzeppelin/contracts/proxy/Proxy.sol": {
-      "lastModificationDate": 1657178895657,
+      "lastModificationDate": 1657192766055,
       "contentHash": "40b3d81a836d50ff47e03893dcaaf204",
       "sourceName": "@openzeppelin/contracts/proxy/Proxy.sol",
       "solcConfig": {
@@ -493,7 +531,7 @@
       ]
     },
     "/Users/dr.mac/Desktop/blockchain-projects/Marketplace/node_modules/@openzeppelin/contracts/proxy/ERC1967/ERC1967Upgrade.sol": {
-      "lastModificationDate": 1657178895173,
+      "lastModificationDate": 1657192765399,
       "contentHash": "6baa887a798e95b14f34e093f117e9b2",
       "sourceName": "@openzeppelin/contracts/proxy/ERC1967/ERC1967Upgrade.sol",
       "solcConfig": {
@@ -534,7 +572,7 @@
       ]
     },
     "/Users/dr.mac/Desktop/blockchain-projects/Marketplace/node_modules/@openzeppelin/contracts/proxy/beacon/IBeacon.sol": {
-      "lastModificationDate": 1657178895446,
+      "lastModificationDate": 1657192765766,
       "contentHash": "b6bd23bf19e90b771337037706470933",
       "sourceName": "@openzeppelin/contracts/proxy/beacon/IBeacon.sol",
       "solcConfig": {
@@ -570,7 +608,7 @@
       ]
     },
     "/Users/dr.mac/Desktop/blockchain-projects/Marketplace/node_modules/@openzeppelin/contracts/interfaces/draft-IERC1822.sol": {
-      "lastModificationDate": 1657178895092,
+      "lastModificationDate": 1657192765253,
       "contentHash": "2858d98e74e67987ec81b39605230b74",
       "sourceName": "@openzeppelin/contracts/interfaces/draft-IERC1822.sol",
       "solcConfig": {
@@ -606,7 +644,7 @@
       ]
     },
     "/Users/dr.mac/Desktop/blockchain-projects/Marketplace/node_modules/@openzeppelin/contracts/utils/Address.sol": {
-      "lastModificationDate": 1657178894961,
+      "lastModificationDate": 1657192765021,
       "contentHash": "c476b3895a94798b88a4bb97399e6dfe",
       "sourceName": "@openzeppelin/contracts/utils/Address.sol",
       "solcConfig": {
@@ -642,7 +680,7 @@
       ]
     },
     "/Users/dr.mac/Desktop/blockchain-projects/Marketplace/node_modules/@openzeppelin/contracts/utils/StorageSlot.sol": {
-      "lastModificationDate": 1657178895709,
+      "lastModificationDate": 1657192766111,
       "contentHash": "f993f8f50186952a59ee5e3a30b68222",
       "sourceName": "@openzeppelin/contracts/utils/StorageSlot.sol",
       "solcConfig": {
@@ -678,7 +716,7 @@
       ]
     },
     "/Users/dr.mac/Desktop/blockchain-projects/Marketplace/node_modules/@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol": {
-      "lastModificationDate": 1657175438502,
+      "lastModificationDate": 1657192764988,
       "contentHash": "6200b84950eb05b4a92a39fd1d6e0f9b",
       "sourceName": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol",
       "solcConfig": {
@@ -762,7 +800,7 @@
       ]
     },
     "/Users/dr.mac/Desktop/blockchain-projects/Marketplace/node_modules/@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721URIStorageUpgradeable.sol": {
-      "lastModificationDate": 1657175438498,
+      "lastModificationDate": 1657192765599,
       "contentHash": "351bef3ae2616e8dea21cab97b446ba1",
       "sourceName": "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721URIStorageUpgradeable.sol",
       "solcConfig": {
@@ -801,7 +839,7 @@
       ]
     },
     "/Users/dr.mac/Desktop/blockchain-projects/Marketplace/node_modules/@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol": {
-      "lastModificationDate": 1657175438502,
+      "lastModificationDate": 1657192764990,
       "contentHash": "2e908c762a799baea365e68a50500e2c",
       "sourceName": "@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol",
       "solcConfig": {
@@ -837,7 +875,7 @@
       ]
     },
     "/Users/dr.mac/Desktop/blockchain-projects/Marketplace/node_modules/@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol": {
-      "lastModificationDate": 1657175438497,
+      "lastModificationDate": 1657192765595,
       "contentHash": "95ce4acb1c983b71ed51c0ebea8efd04",
       "sourceName": "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol",
       "solcConfig": {
@@ -882,7 +920,7 @@
       ]
     },
     "/Users/dr.mac/Desktop/blockchain-projects/Marketplace/node_modules/@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721BurnableUpgradeable.sol": {
-      "lastModificationDate": 1657175438497,
+      "lastModificationDate": 1657192765526,
       "contentHash": "c09a024fa284902d04fb22721986cb62",
       "sourceName": "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721BurnableUpgradeable.sol",
       "solcConfig": {
@@ -922,7 +960,7 @@
       ]
     },
     "/Users/dr.mac/Desktop/blockchain-projects/Marketplace/node_modules/@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol": {
-      "lastModificationDate": 1657175438497,
+      "lastModificationDate": 1657192765540,
       "contentHash": "4dc7cd48fcf3374dc73f8788fdcfcc93",
       "sourceName": "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol",
       "solcConfig": {
@@ -962,7 +1000,7 @@
       ]
     },
     "/Users/dr.mac/Desktop/blockchain-projects/Marketplace/node_modules/@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721PausableUpgradeable.sol": {
-      "lastModificationDate": 1657175438498,
+      "lastModificationDate": 1657192765558,
       "contentHash": "78030bd3e2c267dcd0c12eac4e45987e",
       "sourceName": "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721PausableUpgradeable.sol",
       "solcConfig": {
@@ -1002,7 +1040,7 @@
       ]
     },
     "/Users/dr.mac/Desktop/blockchain-projects/Marketplace/node_modules/@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721RoyaltyUpgradeable.sol": {
-      "lastModificationDate": 1657175438498,
+      "lastModificationDate": 1657192765576,
       "contentHash": "ab5be4956965d5de21a098dd634a94b1",
       "sourceName": "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721RoyaltyUpgradeable.sol",
       "solcConfig": {
@@ -1043,7 +1081,7 @@
       ]
     },
     "/Users/dr.mac/Desktop/blockchain-projects/Marketplace/node_modules/@openzeppelin/contracts-upgradeable/token/ERC721/IERC721ReceiverUpgradeable.sol": {
-      "lastModificationDate": 1657175438497,
+      "lastModificationDate": 1657192765908,
       "contentHash": "ba28cf60b52b00d2b3a190bcdf0952bd",
       "sourceName": "@openzeppelin/contracts-upgradeable/token/ERC721/IERC721ReceiverUpgradeable.sol",
       "solcConfig": {
@@ -1079,7 +1117,7 @@
       ]
     },
     "/Users/dr.mac/Desktop/blockchain-projects/Marketplace/node_modules/@openzeppelin/contracts-upgradeable/token/ERC721/extensions/IERC721MetadataUpgradeable.sol": {
-      "lastModificationDate": 1657175438498,
+      "lastModificationDate": 1657192765902,
       "contentHash": "76212ca0265501d1eb3dd1175e6afca4",
       "sourceName": "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/IERC721MetadataUpgradeable.sol",
       "solcConfig": {
@@ -1117,7 +1155,7 @@
       ]
     },
     "/Users/dr.mac/Desktop/blockchain-projects/Marketplace/node_modules/@openzeppelin/contracts-upgradeable/utils/StringsUpgradeable.sol": {
-      "lastModificationDate": 1657175438505,
+      "lastModificationDate": 1657192766140,
       "contentHash": "b9d00086379b2524eb287c850a1b2e54",
       "sourceName": "@openzeppelin/contracts-upgradeable/utils/StringsUpgradeable.sol",
       "solcConfig": {
@@ -1153,7 +1191,7 @@
       ]
     },
     "/Users/dr.mac/Desktop/blockchain-projects/Marketplace/node_modules/@openzeppelin/contracts-upgradeable/utils/introspection/ERC165Upgradeable.sol": {
-      "lastModificationDate": 1657175438507,
+      "lastModificationDate": 1657192765329,
       "contentHash": "5f2d8b81c0ff5bd2047b4846c20b998d",
       "sourceName": "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165Upgradeable.sol",
       "solcConfig": {
@@ -1192,7 +1230,7 @@
       ]
     },
     "/Users/dr.mac/Desktop/blockchain-projects/Marketplace/node_modules/@openzeppelin/contracts-upgradeable/token/ERC721/extensions/IERC721EnumerableUpgradeable.sol": {
-      "lastModificationDate": 1657175438498,
+      "lastModificationDate": 1657192765894,
       "contentHash": "bed9876900f8c465d42317f566c03828",
       "sourceName": "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/IERC721EnumerableUpgradeable.sol",
       "solcConfig": {
@@ -1230,7 +1268,7 @@
       ]
     },
     "/Users/dr.mac/Desktop/blockchain-projects/Marketplace/node_modules/@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol": {
-      "lastModificationDate": 1657175438490,
+      "lastModificationDate": 1657192766049,
       "contentHash": "cbe53d6b803c1102081e00b3a0418ea3",
       "sourceName": "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol",
       "solcConfig": {
@@ -1269,7 +1307,7 @@
       ]
     },
     "/Users/dr.mac/Desktop/blockchain-projects/Marketplace/node_modules/@openzeppelin/contracts-upgradeable/token/common/ERC2981Upgradeable.sol": {
-      "lastModificationDate": 1657175438501,
+      "lastModificationDate": 1657192765522,
       "contentHash": "0cda6f2ba7e380932f8436067751bbc6",
       "sourceName": "@openzeppelin/contracts-upgradeable/token/common/ERC2981Upgradeable.sol",
       "solcConfig": {
@@ -1309,7 +1347,7 @@
       ]
     },
     "/Users/dr.mac/Desktop/blockchain-projects/Marketplace/node_modules/@openzeppelin/contracts-upgradeable/interfaces/IERC2981Upgradeable.sol": {
-      "lastModificationDate": 1657175438485,
+      "lastModificationDate": 1657192765871,
       "contentHash": "cb60157e1058e75780f1dd7c720b18eb",
       "sourceName": "@openzeppelin/contracts-upgradeable/interfaces/IERC2981Upgradeable.sol",
       "solcConfig": {
@@ -1347,7 +1385,7 @@
       ]
     },
     "/Users/dr.mac/Desktop/blockchain-projects/Marketplace/node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol": {
-      "lastModificationDate": 1657178895483,
+      "lastModificationDate": 1657192765859,
       "contentHash": "909ab67fc5c25033fe6cd364f8c056f9",
       "sourceName": "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol",
       "solcConfig": {
@@ -1385,7 +1423,7 @@
       ]
     },
     "/Users/dr.mac/Desktop/blockchain-projects/Marketplace/node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol": {
-      "lastModificationDate": 1657178895179,
+      "lastModificationDate": 1657192765483,
       "contentHash": "af7bd64e1cfefbf6cb07f2adc1a25392",
       "sourceName": "@openzeppelin/contracts/token/ERC20/ERC20.sol",
       "solcConfig": {
@@ -1425,7 +1463,7 @@
       ]
     },
     "/Users/dr.mac/Desktop/blockchain-projects/Marketplace/node_modules/@openzeppelin/contracts/utils/Context.sol": {
-      "lastModificationDate": 1657178895007,
+      "lastModificationDate": 1657192765119,
       "contentHash": "5f2c5c4b6af2dd4551027144797bc8be",
       "sourceName": "@openzeppelin/contracts/utils/Context.sol",
       "solcConfig": {
@@ -1532,6 +1570,42 @@
       ],
       "artifacts": [
         "WETH"
+      ]
+    },
+    "/Users/dr.mac/Desktop/blockchain-projects/Marketplace/node_modules/@openzeppelin/contracts-upgradeable/utils/math/SafeMathUpgradeable.sol": {
+      "lastModificationDate": 1657192766100,
+      "contentHash": "d4935b19cfe21e88d08fab5f379dd020",
+      "sourceName": "@openzeppelin/contracts-upgradeable/utils/math/SafeMathUpgradeable.sol",
+      "solcConfig": {
+        "version": "0.8.2",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "SafeMathUpgradeable"
       ]
     }
   }

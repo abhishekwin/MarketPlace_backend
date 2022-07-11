@@ -171,9 +171,9 @@
           "type": "string"
         },
         {
-          "internalType": "uint256",
+          "internalType": "uint96",
           "name": "_royality",
-          "type": "uint256"
+          "type": "uint96"
         }
       ],
       "name": "mint",

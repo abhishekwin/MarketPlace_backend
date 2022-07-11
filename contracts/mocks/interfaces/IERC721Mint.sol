@@ -7,6 +7,6 @@ interface IERC721Mint is IERC721 {
     function mint(
         address to,
         string memory tokenURI,
-        uint256 _royality
+        uint96 _royality
     ) external returns (uint256);
 }

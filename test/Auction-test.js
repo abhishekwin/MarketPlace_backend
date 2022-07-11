@@ -3,14 +3,10 @@ const { ethers } = require("hardhat");
 const hre = require("hardhat");
 const Web3 = require("web3");
 
-let seller, add2, auction, weth, myNFT, bidder, sellerSign, bidderSign, nick, amount, sign, sellerStruct, bidderStruct;
-let royality = 20,
-  nonce = 1,
-  startTime = Math.floor(Date.now() / 1000);
-let endTime = Math.floor(Date.now() / 1000) + 200,
-  timeDuration = 100,
-  bidTime = 200;
-  
+let userA, userC, userD, auction, weth, myNFT, sellerSign, winnerSign;
+let royality = 20, nonce = 1, startTime = Math.floor(Date.now() / 1000);
+let endTime = Math.floor(Date.now() / 1000) + 200, bidTime = 200;
+
 
 describe("Auction", () => {
   before(async () => {
@@ -19,31 +15,28 @@ describe("Auction", () => {
 
     accounts = await hre.ethers.getSigners();
 
-    [seller, bidder, add2, auction, add3, add4, _] = accounts;
+    [userA, userB, userC, userD, userE, _] = accounts;
+
 
     // NFT721
-    let MyToken = await hre.ethers.getContractFactory("MyNFT");
+    let MyNFT = await hre.ethers.getContractFactory("MyNFT");
 
-    myNFT = await upgrades.deployProxy(MyToken, [500], {
+    myNFT = await upgrades.deployProxy(MyNFT, [500], {
       initializer: "initialize",
     });
     await myNFT.deployed();
-    console.log("MyNFT deployed to:", myNFT.address);
 
-    // Weth
+    // WETH deployed
     WETH = await hre.ethers.getContractFactory("WETH");
     weth = await WETH.deploy();
 
     await weth.deployed();
 
- 
+
+    // myToken token deployed
     const ERC20Token = await hre.ethers.getContractFactory("ERC20Token");
-     myToken = await ERC20Token.deploy("1000")
-
+    myToken = await ERC20Token.deploy("4000000000000000000")
     await myToken.deployed();
-
-    console.log("ERC20Token deployed to:",myToken.address);
-
 
 
     //Deployed Contract
@@ -51,31 +44,35 @@ describe("Auction", () => {
     auction = await Auction.deploy();
     await auction.deployed();
   });
-  //
+ 
+  // test cases lazyAuction success cases.
   describe("lazyAuction success cases", () => {
     it("testing lazy auction with new nft mint ", async () => {
-      //  seller sign
+      let nonce = 0;
+      //  sellerSign(userA)
       let message = ethers.utils.solidityPack(
         ["address", "uint256", "string", "address", "uint256"],
         [myNFT.address, "0", "uri", weth.address, "300"]
       );
       let messageHash = ethers.utils.keccak256(message);
 
-      let sellerSign = await web3.eth.sign(messageHash, accounts[0].address);
+      sellerSign = await web3.eth.sign(messageHash, userA.address);
 
-      // bidder sign
+      // userB sign
       let message1 = ethers.utils.solidityPack(
-        ["address", "uint256", "string", "address", "uint256"],
-        [myNFT.address, "0", "uri", weth.address, "300"]
+        ["address", "uint256", "uint256"],
+        [userB.address, "300", "200"]
       );
 
-      let messageHash1 = ethers.utils.keccak256(message);
-      let bidderSign = await web3.eth.sign(messageHash1, accounts[1].address);
-      await weth.connect(bidder).deposit({ value: "1000000000000" });
-      await weth.connect(bidder).approve(auction.address, 3000);
+      let messageHash1 = ethers.utils.keccak256(message1);
+      let winnerSign = await web3.eth.sign(messageHash1, userB.address);
+      await myNFT.connect(userA).setApprovalForAll(auction.address, true)
+      await weth.connect(userB).deposit({ value: "1000000000000" });
+      await weth.connect(userB).approve(auction.address, 3000);
+
 
       let sellerStruct = [
-        seller.address,
+        userA.address,
         myNFT.address,
         "0",
         300,
@@ -85,237 +82,461 @@ describe("Auction", () => {
         royality,
         nonce,
         startTime,
-        endTime,
-        timeDuration,
+        endTime
+
       ];
-      let bidderStruct = [
-        bidder.address,
-        myNFT.address,
-        "0",
+      let winnerStruct = [
+        userB.address,
         300,
-        weth.address,
-        "uri",
-        bidderSign,
-        bidTime,
+        winnerSign,
+        bidTime
       ];
 
-      const lazy = await auction
-        .connect(bidder)
-        .lazyAuction(sellerStruct, bidderStruct);
 
-      expect(await myNFT.ownerOf(1)).to.be.equal(bidder.address);
+      await auction
+        .connect(userB)
+        .lazyAuction(sellerStruct, winnerStruct);
+      expect(await myNFT.ownerOf(1)).to.be.equal(userB.address);
     });
-    it("Mint with erc20 Token", async () => {
-      //  seller sign
+
+    it("it should buy minted nft with WETH", async () => {
+      let nonce = 1;
+      // platformFee
+      let nftPrice = ethers.utils.parseEther('1');
+      let plaFormFee = 100;
+
+      // sellerSign(userB)
       let message = ethers.utils.solidityPack(
         ["address", "uint256", "string", "address", "uint256"],
-        [myNFT.address, "0", "uri", myToken.address, "300"]
+        [myNFT.address, "1", "uri", weth.address, nftPrice]
       );
-      let messageHash = ethers.utils.keccak256(message);
+      messageHash = ethers.utils.keccak256(message);
+      sellerSign = await web3.eth.sign(messageHash, userB.address);
+      expect(await auction.getSigner(messageHash, sellerSign)).to.be.equal(
+        userB.address
+      );
 
-      let sellerSign = await web3.eth.sign(messageHash, accounts[0].address);
 
-      // bidder sign
+      //  userC sign
       let message1 = ethers.utils.solidityPack(
-        ["address", "uint256", "string", "address", "uint256"],
-        [myNFT.address, "0", "uri", weth.address, "300"]
+        ["address", "uint256", "uint256"],
+        [userC.address, nftPrice, "200"]
       );
 
-      let messageHash1 = ethers.utils.keccak256(message);
-      let bidderSign = await web3.eth.sign(messageHash1, accounts[1].address);
-      await myToken.connect(bidder).deposit({ value: "1000000000000" });
-      await myToken.connect(bidder).approve(auction.address, 3000);
+      let messageHash1 = ethers.utils.keccak256(message1);
+      let winnerSign = await web3.eth.sign(messageHash1, userC.address);
+      await myNFT.connect(userB).setApprovalForAll(auction.address, true);
+      await weth.connect(userC).deposit({ value: nftPrice });
+      let oldwinnerBal = await weth.balanceOf(userB.address);
+      let oldauctionBal = await weth.balanceOf(auction.address);
+
+
+      await weth.connect(userC).approve(auction.address, ethers.utils.parseEther('4'));
+      let platFormFee = ((nftPrice.mul(new ethers.BigNumber.from("200"))).div(new ethers.BigNumber.from("10000")));
 
       let sellerStruct = [
-        seller.address,
+        userB.address,
         myNFT.address,
-        "0",
-        300,
+        "1",
+        nftPrice,
+        weth.address,
+        "uri",
+        sellerSign,
+        royality,
+        nonce,
+        startTime,
+        endTime
+
+      ];
+      let winnerStruct = [
+        userC.address,
+        nftPrice,
+        winnerSign,
+        bidTime
+      ];
+
+      await auction
+        .connect(userC)
+        .lazyAuction(sellerStruct, winnerStruct);
+
+      expect(await myNFT.ownerOf(1)).to.be.equal(userC.address);
+
+      expect(await weth.balanceOf(userB.address)).to.be.equals(nftPrice.sub(platFormFee).add(oldwinnerBal));
+      expect(await weth.balanceOf(auction.address)).to.be.equals(platFormFee.add(oldauctionBal));
+    });
+
+    it("it should buy minted nft myToken", async () => {
+      let nonce = 7;
+      // platformFee
+      let nftPrice = ethers.utils.parseEther('1');
+      let plaFormFee = 100;
+
+      // sellerSign(userC)
+      let message = ethers.utils.solidityPack(
+        ["address", "uint256", "string", "address", "uint256"],
+        [myNFT.address, "1", "uri", myToken.address, nftPrice]
+      );
+      messageHash = ethers.utils.keccak256(message);
+      sellerSign = await web3.eth.sign(messageHash, userC.address);
+      expect(await auction.getSigner(messageHash, sellerSign)).to.be.equal(
+        userC.address
+      );
+
+
+      //  userD sign
+      let message1 = ethers.utils.solidityPack(
+        ["address", "uint256", "uint256"],
+        [userD.address, nftPrice, "200"]
+      );
+
+      let messageHash1 = ethers.utils.keccak256(message1);
+      let winnerSign = await web3.eth.sign(messageHash1, userD.address);
+      await myNFT.connect(userC).setApprovalForAll(auction.address, true);
+      await myToken.transfer(userD.address, nftPrice);
+      let oldwinnerBal = await myToken.balanceOf(userC.address);
+      let oldauctionBal = await myToken.balanceOf(auction.address);
+
+
+      await myToken.connect(userD).approve(auction.address, ethers.utils.parseEther('4'));
+      let platFormFee = ((nftPrice.mul(new ethers.BigNumber.from("200"))).div(new ethers.BigNumber.from("10000")));
+
+
+      let sellerStruct = [
+        userC.address,
+        myNFT.address,
+        "1",
+        nftPrice,
         myToken.address,
         "uri",
         sellerSign,
         royality,
         nonce,
         startTime,
-        endTime,
-        timeDuration,
+        endTime
+
       ];
-      let bidderStruct = [
-        bidder.address,
-        myNFT.address,
-        "0",
-        300,
-        myToken.address,
-        "uri",
-        bidderSign,
-        bidTime,
+      let winnerStruct = [
+        userD.address,
+        nftPrice,
+        winnerSign,
+        bidTime
       ];
 
-      const lazy = await auction
-        .connect(bidder)
-        .lazyAuction(sellerStruct, bidderStruct);
+      await auction
+        .connect(userD)
+        .lazyAuction(sellerStruct, winnerStruct);
 
-      expect(await myNFT.ownerOf(2)).to.be.equal(bidder.address);
-      // expect(await myNFT.balanceOf(bidder.address)).to.be.equal(2);
+      expect(await myNFT.ownerOf(1)).to.be.equal(userD.address);
+
+      expect(await myToken.balanceOf(userC.address)).to.be.equals(nftPrice.sub(platFormFee).add(oldwinnerBal));
+      expect(await myToken.balanceOf(auction.address)).to.be.equals(platFormFee.add(oldauctionBal));
     });
-    it("it should buy minted nft", async () => {
-      //  seller sign
-      let message = ethers.utils.solidityPack(
-        ["address", "uint256", "string", "address", "uint256"],
-        [myNFT.address, "1", "uri", myToken.address, "300"]
-      );
-      let messageHash = ethers.utils.keccak256(message);
 
-      let add2Sign = await web3.eth.sign(messageHash, add2.address);
+    //  test cases lazyAuction Negetive cases.
+    describe("lazyAuction Negetive Cases", () => {
+      it('nonce already process', async () => {
+        let nonce = 1;
 
-      // bidder sign
-      let message1 = ethers.utils.solidityPack(
-        ["address", "uint256", "string", "address", "uint256"],
-        [myNFT.address, "1", "uri", weth.address, "300"]
-      );
+        //  userA sign
+        let message = ethers.utils.solidityPack(
+          ["address", "uint256", "string", "address", "uint256"],
+          [myNFT.address, "0", "uri", weth.address, "300"]
+        );
+        let messageHash = ethers.utils.keccak256(message);
 
-      let messageHash1 = ethers.utils.keccak256(message);
-      let bidderSign = await web3.eth.sign(messageHash1, bidder.address);
-      await weth.connect(bidder).transfer(add2.address, 1000000);
-      await myNFT.connect(bidder).approve(auction.address, 1);
+        sellerSign = await web3.eth.sign(messageHash, userA.address);
 
-      await weth.connect(add2).approve(auction.address, 3000);
+        // userB sign
+        let message1 = ethers.utils.solidityPack(
+          ["address", "uint256", "uint256"],
+          [userB.address, "300", "200"]
+        );
 
-      let sellerStruct = [
-        bidder.address,
-        myNFT.address,
-        "1",
-        300,
-        weth.address,
-        "uri",
-        bidderSign,
-        royality,
-        nonce,
-        startTime,
-        endTime,
-        timeDuration,
-      ];
-      let bidderStruct = [
-        add2.address,
-        myNFT.address,
-        "1",
-        300,
-        weth.address,
-        "uri",
-        add2Sign,
-        bidTime,
-      ];
-      const lazyAuction = await auction.lazyAuction(sellerStruct, bidderStruct);
+        let messageHash1 = ethers.utils.keccak256(message1);
+        let winnerSign = await web3.eth.sign(messageHash1, userB.address);
+        await myNFT.connect(userA).setApprovalForAll(auction.address, true)
+        await weth.connect(userB).deposit({ value: "1000000000000" });
+        await weth.connect(userB).approve(auction.address, 3000);
+
+
+        let sellerStruct = [
+          userA.address,
+          myNFT.address,
+          "0",
+          300,
+          weth.address,
+          "uri",
+          sellerSign,
+          royality,
+          nonce,
+          startTime,
+          endTime
+
+        ];
+        let winnerStruct = [
+          userB.address,
+          300,
+          winnerSign,
+          bidTime]
+
+
+        await expect(auction
+          .connect(userB)
+          .lazyAuction(sellerStruct, winnerStruct)).to.be.revertedWith("Auction: nonce already process");
+      });
+
+      it('address not approve', async () => {
+        let nonce = 2;
+        //  userA sign
+        let message = ethers.utils.solidityPack(
+          ["address", "uint256", "string", "address", "uint256"],
+          [myNFT.address, "0", "uri", weth.address, "300"]
+        );
+        let messageHash = ethers.utils.keccak256(message);
+
+        sellerSign = await web3.eth.sign(messageHash, userA.address);
+
+        // userB sign
+        let message1 = ethers.utils.solidityPack(
+          ["address", "uint256", "uint256"],
+          [userB.address, "300", "200"]
+        );
+
+        let messageHash1 = ethers.utils.keccak256(message1);
+        let winnerSign = await web3.eth.sign(messageHash1, userB.address);
+        await myNFT.connect(userA).setApprovalForAll(auction.address, false)
+        await weth.connect(userB).deposit({ value: "1000000000000" });
+        await weth.connect(userB).approve(auction.address, 3000);
+
+
+        let sellerStruct = [
+          userA.address,
+          myNFT.address,
+          "0",
+          300,
+          weth.address,
+          "uri",
+          sellerSign,
+          royality,
+          nonce,
+          startTime,
+          endTime
+
+        ];
+        let winnerStruct = [
+          userB.address,
+          300,
+          winnerSign,
+          bidTime]
+
+        await expect(auction
+          .connect(userB)
+          .lazyAuction(sellerStruct, winnerStruct)).to.be.revertedWith("Auction: address not approve");
+
+      });
+
+      it('Should check Insufficient Amount', async () => {
+        let nonce = 3;
+        //  userA sign
+        let message = ethers.utils.solidityPack(
+          ["address", "uint256", "string", "address", "uint256"],
+          [myNFT.address, "0", "uri", weth.address, ethers.utils.parseEther("100")]
+        );
+        let messageHash = ethers.utils.keccak256(message);
+
+        sellerSign = await web3.eth.sign(messageHash, userA.address);
+
+        // userB sign
+        let message1 = ethers.utils.solidityPack(
+          ["address", "uint256", "uint256"],
+          [userB.address, ethers.utils.parseEther("100"), "200"]
+        );
+
+        let messageHash1 = ethers.utils.keccak256(message1);
+        let winnerSign = await web3.eth.sign(messageHash1, userB.address);
+        // await weth.connect(userB).deposit({ value: "1000000000000" });
+        await myNFT.connect(userA).setApprovalForAll(auction.address, true)
+        await weth.connect(userB).approve(auction.address, 3000);
+
+
+        let sellerStruct = [
+          userA.address,
+          myNFT.address,
+          "0",
+          ethers.utils.parseEther("100"),
+          weth.address,
+          "uri",
+          sellerSign,
+          royality,
+          nonce,
+          startTime,
+          endTime
+
+        ];
+        let winnerStruct = [
+          userB.address,
+          ethers.utils.parseEther("100"),
+          winnerSign,
+          bidTime]
+
+        await expect(auction
+          .connect(userB)
+          .lazyAuction(sellerStruct, winnerStruct)).to.be.revertedWith("Auction: Insuficent fund");
+
+      });
+
+      it('Should check  seller sign verification', async () => {
+        let nonce = 3;
+        //  userA sign
+        let message = ethers.utils.solidityPack(
+          ["address", "uint256", "string", "address", "uint256"],
+          [myNFT.address, "0", "uri", weth.address, ethers.utils.parseEther("100")]
+        );
+        let messageHash = ethers.utils.keccak256(message);
+
+        sellerSign = await web3.eth.sign(messageHash, userA.address);
+
+        // userB sign
+        let message1 = ethers.utils.solidityPack(
+          ["address", "uint256", "uint256"],
+          [userB.address, '300', "200"]
+        );
+
+        let messageHash1 = ethers.utils.keccak256(message1);
+        let winnerSign = await web3.eth.sign(messageHash1, userB.address);
+        await weth.connect(userB).deposit({ value: "1000000000000" });
+
+        await myNFT.connect(userA).setApprovalForAll(auction.address, true)
+        await weth.connect(userB).approve(auction.address, 3000);
+
+
+        let sellerStruct = [
+          userA.address,
+          myNFT.address,
+          "0",
+          ethers.utils.parseEther("100"),
+          weth.address,
+          "uri",
+          sellerSign,
+          royality,
+          nonce,
+          startTime,
+          endTime
+
+        ];
+        let winnerStruct = [
+          userB.address,
+          ethers.utils.parseEther("100"),
+          winnerSign,
+          bidTime]
+
+        await expect(auction
+          .connect(userB)
+          .lazyAuction(sellerStruct, winnerStruct)).to.be.revertedWith("Auction: seller sign verification failed");
+
+      });
+
+      it('Should Check the token allowance.', async () => {
+        let nonce = 4;
+        //  userA sign
+        let message = ethers.utils.solidityPack(
+          ["address", "uint256", "string", "address", "uint256"],
+          [myNFT.address, "0", "uri", weth.address, '300']
+        );
+        let messageHash = ethers.utils.keccak256(message);
+
+        sellerSign = await web3.eth.sign(messageHash, userA.address);
+
+        // userB sign
+        let message1 = ethers.utils.solidityPack(
+          ["address", "uint256", "uint256"],
+          [userB.address, '300', "200"]
+        );
+
+        let messageHash1 = ethers.utils.keccak256(message1);
+        let winnerSign = await web3.eth.sign(messageHash1, userB.address);
+        await weth.connect(userB).deposit({ value: "1000000" });
+
+        await myNFT.connect(userA).setApprovalForAll(auction.address, true)
+        await weth.connect(userB).approve(auction.address, 3000);
+
+
+        let sellerStruct = [
+          userA.address,
+          myNFT.address,
+          "0",
+          '300',
+          weth.address,
+          "uri",
+          sellerSign,
+          royality,
+          nonce,
+          startTime,
+          endTime
+
+        ];
+        let winnerStruct = [
+          userB.address,
+          '300',
+          winnerSign,
+          bidTime]
+
+        await expect(auction
+          .connect(userA)
+          .lazyAuction(sellerStruct, winnerStruct)).to.be.revertedWith("Auction: Check the token allowance.");
+
+      });
+
+      it('cheaking invalid signature length.', async () => {
+        let nonce = 4;
+        //  userA sign
+        let message = ethers.utils.solidityPack(
+          ["address", "uint256", "string", "address", "uint256"],
+          [myNFT.address, "0", "uri", weth.address, '300']
+        );
+        let messageHash = ethers.utils.keccak256(message);
+
+        sellerSign = await web3.eth.sign(messageHash, userA.address);
+
+        // userB sign
+        let message1 = ethers.utils.solidityPack(
+          ["address", "uint256", "uint256"],
+          [userB.address, '300', "200"]
+        );
+
+        let messageHash1 = ethers.utils.keccak256(message1);
+        let winnerSign = await web3.eth.sign(messageHash1, userB.address);
+        await weth.connect(userB).deposit({ value: "1000000" });
+
+        await myNFT.connect(userA).setApprovalForAll(auction.address, true)
+        await weth.connect(userB).approve(auction.address, 3000);
+
+
+        let sellerStruct = [
+          userA.address,
+          myNFT.address,
+          "0",
+          '300',
+          weth.address,
+          "uri",
+          "0xf115cfbf0589119b0c6f12191c23a7842d309284419c774077b3c49c0c80a0d51dfeeea40a13d26149217d72e497a8d255a28e45a0df43f792574fddb7c12223",
+          royality,
+          nonce,
+          startTime,
+          endTime
+
+        ];
+        let winnerStruct = [
+          userB.address,
+          '300',
+          winnerSign,
+          bidTime]
+
+        await expect(auction
+          .connect(userA)
+          .lazyAuction(sellerStruct, winnerStruct)).to.be.revertedWith("Auction: invalid signature length");
+
+      });
     });
-   
   });
-  describe("lazyAuction negative cases", () => {
-     it("Address not approve", async () => {
-    //   // sellerSign
-      let message = ethers.utils.solidityPack(
-        ["address", "uint256", "string", "address", "uint256"],
-        [myNFT.address, "1", "uri", weth.address, "300"]
-      );
-      let messageHash = ethers.utils.keccak256(message);
-      let bidderSign = await web3.eth.sign(messageHash, bidder.address);
-
-    //   // bidderSign
-      let message1 = ethers.utils.solidityPack(
-        ["address", "uint256", "string", "address", "uint256"],
-        [myNFT.address, "1", "uri", weth.address, "300"]
-      );
-     
-    let messageHash1 = ethers.utils.keccak256(message1);
-
-      let add3Sign = await web3.eth.sign(messageHash1, add3.address);
-
-      await weth.connect(bidder).transfer(add3.address, 1000000);
-
-      await weth.connect(add3).approve(auction.address, 3000);
-
-
-      let sellerStruct = [
-        bidder.address,
-        myNFT.address,
-        "1",
-        300,
-        weth.address,
-        "uri",
-        bidderSign,
-        royality,
-        nonce,
-        startTime,
-        endTime,
-        timeDuration,
-      ];
-      let bidderStruct = [
-        add3.address,
-        myNFT.address,
-        "1",
-        300,
-        weth.address,
-        "uri",
-        add3Sign,
-        bidTime,
-      ];
-
-      await expect(
-      auction.connect(add3).lazyAuction(sellerStruct, bidderStruct)
-    ).to.be.revertedWith("address not approve");
-
-    })
-  })
-
-  it("Insuficent fund", async () => {
-    //   // sellerSign
-      let message = ethers.utils.solidityPack(
-        ["address", "uint256", "string", "address", "uint256"],
-        [myNFT.address, "1", "uri", weth.address, "300"]
-      );
-      let messageHash = ethers.utils.keccak256(message);
-      let bidderSign = await web3.eth.sign(messageHash, bidder.address);
-
-    //   // bidderSign
-      let message1 = ethers.utils.solidityPack(
-        ["address", "uint256", "string", "address", "uint256"],
-        [myNFT.address, "1", "uri", weth.address, "300"]
-      );
-     
-    let messageHash1 = ethers.utils.keccak256(message1);
-
-      let add3Sign = await web3.eth.sign(messageHash1, add3.address);
-     console.log(await weth.balanceOf(bidder.address));
-      // await weth.connect(bidder).transfer(add3.address, 1000);
-      // await myNFT.connect(bidder).approve(auction.address, 1);
-      // await weth.connect(add3).approve(auction.address, 300);
-
-      let sellerStruct = [
-        bidder.address,
-        myNFT.address,
-        "1",
-        300,
-        weth.address,
-        "uri",
-        bidderSign,
-        royality,
-        nonce,
-        startTime,
-        endTime,
-        timeDuration,
-      ];
-      let bidderStruct = [
-        add3.address,
-        myNFT.address,
-        "1",
-        300,
-        weth.address,
-        "uri",
-        add3Sign,
-        bidTime,
-      ];
-
-    //   await expect(
-    //   auction.connect(add3).lazyAuction(sellerStruct, bidderStruct)
-    // ).to.be.revertedWith("Insuficent fund");
-});
 })
