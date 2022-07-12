@@ -31,7 +31,7 @@ interface IERC165Upgradeable {
 
 // File @openzeppelin/contracts-upgradeable/token/ERC721/IERC721Upgradeable.sol@v4.6.0
 
-
+// SPDX-License-Identifier: MIT
 // OpenZeppelin Contracts (last updated v4.6.0) (token/ERC721/IERC721.sol)
 
 pragma solidity ^0.8.0;
@@ -176,7 +176,7 @@ interface IERC721Upgradeable is IERC165Upgradeable {
 
 // File @openzeppelin/contracts-upgradeable/token/ERC721/IERC721ReceiverUpgradeable.sol@v4.6.0
 
-
+// SPDX-License-Identifier: MIT
 // OpenZeppelin Contracts (last updated v4.6.0) (token/ERC721/IERC721Receiver.sol)
 
 pragma solidity ^0.8.0;
@@ -207,7 +207,7 @@ interface IERC721ReceiverUpgradeable {
 
 // File @openzeppelin/contracts-upgradeable/token/ERC721/extensions/IERC721MetadataUpgradeable.sol@v4.6.0
 
-
+// SPDX-License-Identifier: MIT
 // OpenZeppelin Contracts v4.4.1 (token/ERC721/extensions/IERC721Metadata.sol)
 
 pragma solidity ^0.8.0;
@@ -236,7 +236,7 @@ interface IERC721MetadataUpgradeable is IERC721Upgradeable {
 
 // File @openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol@v4.6.0
 
-
+// SPDX-License-Identifier: MIT
 // OpenZeppelin Contracts (last updated v4.5.0) (utils/Address.sol)
 
 pragma solidity ^0.8.1;
@@ -435,7 +435,7 @@ library AddressUpgradeable {
 
 // File @openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol@v4.6.0
 
-
+// SPDX-License-Identifier: MIT
 // OpenZeppelin Contracts (last updated v4.6.0) (proxy/utils/Initializable.sol)
 
 pragma solidity ^0.8.2;
@@ -586,7 +586,7 @@ abstract contract Initializable {
 
 // File @openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol@v4.6.0
 
-
+// SPDX-License-Identifier: MIT
 // OpenZeppelin Contracts v4.4.1 (utils/Context.sol)
 
 pragma solidity ^0.8.0;
@@ -626,7 +626,7 @@ abstract contract ContextUpgradeable is Initializable {
 
 // File @openzeppelin/contracts-upgradeable/utils/StringsUpgradeable.sol@v4.6.0
 
-
+// SPDX-License-Identifier: MIT
 // OpenZeppelin Contracts v4.4.1 (utils/Strings.sol)
 
 pragma solidity ^0.8.0;
@@ -697,7 +697,7 @@ library StringsUpgradeable {
 
 // File @openzeppelin/contracts-upgradeable/utils/introspection/ERC165Upgradeable.sol@v4.6.0
 
-
+// SPDX-License-Identifier: MIT
 // OpenZeppelin Contracts v4.4.1 (utils/introspection/ERC165.sol)
 
 pragma solidity ^0.8.0;
@@ -741,7 +741,7 @@ abstract contract ERC165Upgradeable is Initializable, IERC165Upgradeable {
 
 // File @openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol@v4.6.0
 
-
+// SPDX-License-Identifier: MIT
 // OpenZeppelin Contracts (last updated v4.6.0) (token/ERC721/ERC721.sol)
 
 pragma solidity ^0.8.0;
@@ -1202,7 +1202,7 @@ contract ERC721Upgradeable is Initializable, ContextUpgradeable, ERC165Upgradeab
 
 // File @openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721URIStorageUpgradeable.sol@v4.6.0
 
-
+// SPDX-License-Identifier: MIT
 // OpenZeppelin Contracts v4.4.1 (token/ERC721/extensions/ERC721URIStorage.sol)
 
 pragma solidity ^0.8.0;
@@ -1284,7 +1284,7 @@ abstract contract ERC721URIStorageUpgradeable is Initializable, ERC721Upgradeabl
 
 // File @openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol@v4.6.0
 
-
+// SPDX-License-Identifier: MIT
 // OpenZeppelin Contracts v4.4.1 (utils/Counters.sol)
 
 pragma solidity ^0.8.0;
@@ -1331,7 +1331,7 @@ library CountersUpgradeable {
 
 // File @openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721BurnableUpgradeable.sol@v4.6.0
 
-
+// SPDX-License-Identifier: MIT
 // OpenZeppelin Contracts v4.4.1 (token/ERC721/extensions/ERC721Burnable.sol)
 
 pragma solidity ^0.8.0;
@@ -1372,7 +1372,7 @@ abstract contract ERC721BurnableUpgradeable is Initializable, ContextUpgradeable
 
 // File @openzeppelin/contracts-upgradeable/token/ERC721/extensions/IERC721EnumerableUpgradeable.sol@v4.6.0
 
-
+// SPDX-License-Identifier: MIT
 // OpenZeppelin Contracts (last updated v4.5.0) (token/ERC721/extensions/IERC721Enumerable.sol)
 
 pragma solidity ^0.8.0;
@@ -1403,7 +1403,7 @@ interface IERC721EnumerableUpgradeable is IERC721Upgradeable {
 
 // File @openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol@v4.6.0
 
-
+// SPDX-License-Identifier: MIT
 // OpenZeppelin Contracts v4.4.1 (token/ERC721/extensions/ERC721Enumerable.sol)
 
 pragma solidity ^0.8.0;
@@ -1581,7 +1581,7 @@ abstract contract ERC721EnumerableUpgradeable is Initializable, ERC721Upgradeabl
 
 // File @openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol@v4.6.0
 
-
+// SPDX-License-Identifier: MIT
 // OpenZeppelin Contracts v4.4.1 (security/Pausable.sol)
 
 pragma solidity ^0.8.0;
@@ -1686,7 +1686,7 @@ abstract contract PausableUpgradeable is Initializable, ContextUpgradeable {
 
 // File @openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721PausableUpgradeable.sol@v4.6.0
 
-
+// SPDX-License-Identifier: MIT
 // OpenZeppelin Contracts v4.4.1 (token/ERC721/extensions/ERC721Pausable.sol)
 
 pragma solidity ^0.8.0;
@@ -1735,7 +1735,7 @@ abstract contract ERC721PausableUpgradeable is Initializable, ERC721Upgradeable,
 
 // File @openzeppelin/contracts-upgradeable/interfaces/IERC2981Upgradeable.sol@v4.6.0
 
-
+// SPDX-License-Identifier: MIT
 // OpenZeppelin Contracts (last updated v4.6.0) (interfaces/IERC2981.sol)
 
 pragma solidity ^0.8.0;
@@ -1762,7 +1762,7 @@ interface IERC2981Upgradeable is IERC165Upgradeable {
 
 // File @openzeppelin/contracts-upgradeable/token/common/ERC2981Upgradeable.sol@v4.6.0
 
-
+// SPDX-License-Identifier: MIT
 // OpenZeppelin Contracts (last updated v4.6.0) (token/common/ERC2981.sol)
 
 pragma solidity ^0.8.0;
@@ -1889,7 +1889,7 @@ abstract contract ERC2981Upgradeable is Initializable, IERC2981Upgradeable, ERC1
 
 // File @openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721RoyaltyUpgradeable.sol@v4.6.0
 
-
+// SPDX-License-Identifier: MIT
 // OpenZeppelin Contracts (last updated v4.5.0) (token/ERC721/extensions/ERC721Royalty.sol)
 
 pragma solidity ^0.8.0;
@@ -1942,7 +1942,7 @@ abstract contract ERC721RoyaltyUpgradeable is Initializable, ERC2981Upgradeable,
 
 // File @openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol@v4.6.0
 
-
+// SPDX-License-Identifier: MIT
 // OpenZeppelin Contracts v4.4.1 (access/Ownable.sol)
 
 pragma solidity ^0.8.0;
@@ -2032,8 +2032,7 @@ abstract contract OwnableUpgradeable is Initializable, ContextUpgradeable {
 
 // File contracts/ERC721Token.sol
 
-// contracts/MyNFT.sol
-
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
 
@@ -2044,7 +2043,7 @@ pragma solidity ^0.8.0;
 
 
 
-contract MyNFT is
+contract ERC721Token is
     ERC721Upgradeable,
     OwnableUpgradeable,
     ERC721URIStorageUpgradeable,
@@ -2079,8 +2078,8 @@ contract MyNFT is
         string memory tokenURI,
         uint96 _royality
     ) external returns (uint256) {
-        require(_royality <= maximumRoyality, "MyNFT: Royality should be less");
-        require(address(to) != address(0), "MyNFT: to address can't be 0x0");
+        require(_royality <= maximumRoyality, "ERC721Token: Royality should be less");
+        require(address(to) != address(0), "ERC721Token: to address can't be 0x0");
         uint256 newItemId = _tokenIds.current();
 
         _mint(to, newItemId);
@@ -2144,4 +2143,6 @@ contract MyNFT is
     {
         return super.tokenURI(tokenId);
     }
+
+
 }
