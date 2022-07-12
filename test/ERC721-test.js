@@ -90,7 +90,7 @@ describe("ERC721Token", () => {
     it("Should check tokenId approved or not", async () => {
       await expect(
         erc721Token.connect(add1.address).getApproved(2)
-      ).to.be.revertedWith("ERC721: approved query for nonexistent token");
+      ).to.be.revertedWith("ERC721: invalid token ID");
     });
   });
   describe("Checking that supportInterface function", () => {

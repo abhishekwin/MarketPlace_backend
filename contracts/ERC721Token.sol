@@ -38,11 +38,12 @@ contract ERC721Token is
     }
 
     /**
-     * @dev Method to mint nft This Function is used to Mint NFT.
+     * @dev  This Function is used to Mint NFT.
      * @notice  This method is used to Mint NFT.
      * @param to: Address who get NFT.
      * @param tokenURI: NFT String URI.
      * @param _royality: Percentage of creator.
+     * @return tokenId: return the tokenId of the nft.
      */
 
     function mint(
@@ -124,6 +125,7 @@ contract ERC721Token is
      * @dev Method to supportInterface.
      * @notice  This method is used to supportInterface.
      * @param interfaceId: interfaceId of the interface.
+     * @return : return true or false.
      */
 
     function supportsInterface(bytes4 interfaceId)
@@ -144,6 +146,7 @@ contract ERC721Token is
      * @dev Method to call TokenURI.
      * @notice  This method is used to know the tokenURI.
      * @param tokenId: tokenId of the TokenURI.
+     * @return : return tokenURI of the tokenId
      */
 
     function tokenURI(uint256 tokenId)
@@ -156,3 +159,4 @@ contract ERC721Token is
         return super.tokenURI(tokenId);
     }
 }
+ 
