@@ -37,15 +37,6 @@ async function main() {
   });
   await auction.deployed();
   console.log("auction deployed to:", auction.address);
-
-  const ERC721Token = await hre.ethers.getContractFactory("ERC721Token");
-  const erc721Token = await upgrades.deployProxy(ERC721Token, [500], {
-    initializer: "initialize",
-  });
-  
-  await erc721Token.deployed();
-  console.log("ERC721Token deployed to:", erc721Token.address);
-
 }
 // We recommend this pattern to be able to use async/await everywhere
 // and properly handle errors.
