@@ -60,6 +60,7 @@ module.exports = {
 
 
 
-//0xfd67a1a3757b296c1ac016254f3be36adaaba6f6  ropsten mytoken proxy per
-// 0x57A5BC0ec9a36F2cf6d9d9e3e01133cF5BD33316  rinkeby
-// 0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0   localhost
+
+//0x3D2b9F0A4A92f976467cd5BA6711E11ED97Ee0Be rinkeby deploy flat
+//0xC95DF6Da27b6D28AEFC3438d170e148EEA0e53B6 rinkeby implementaion
+//0x8348750544C075b8c1F10d05dE2594FfCe6E3174 rinkeby weth

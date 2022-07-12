@@ -8,7 +8,7 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
 
 contract FlatSale is Initializable, OwnableUpgradeable {
-    ///creating seller details struct.
+    ///Creating Seller Details Struct.
     struct SellerDetails {
         uint256 nonce; //set the nonce.
         address sellerAddress; //set the seller address.
@@ -21,24 +21,41 @@ contract FlatSale is Initializable, OwnableUpgradeable {
         string tokenUri; //set the token URI.
     }
 
-    mapping(uint256 => bool) public isNonceProcessed; ///mapping for nonce
+    ///Events
+    event flatSale(
+        uint256 nonce,
+        address seller,
+        uint256 tokenId,
+        address assetAddress,
+        uint256 amount
+    );
 
-    uint256 platFormFeePercent; /// State variable for PlatFormFeePercent
+    mapping(uint256 => bool) public isNonceProcessed; ///mapping for nonce.
+
+    uint256 platFormFeePercent; /// State variable for PlatFormFeePercent.
 
     uint256 public constant decimalPrecision = 100;
 
     /**
-     * @dev Method to update/reset platFormFeePercent.
+     * @dev Method to set platFormFeePercent.
      * @notice This method initializes the PlatFormFee.
-     * @param _platFormFeePercent: of _platFormFeePercent to update the PlatformFee.
      */
-    function initialize(uint256 _platFormFeePercent) public initializer {
+    function initialize() public initializer {
         __Ownable_init();
-        platFormFeePercent = _platFormFeePercent;
+        platFormFeePercent = 250;
+    }
+    
+    /**
+     *@dev Method to update/reset platFormFeePercent.
+     * @notice This method is used to update Plateform Fee.
+     *@param _newPlatFormFeePercent: the new platform fee will be given.
+     */
+    function setPlatFormFeePercent(uint256 _newPlatFormFeePercent) public {
+        platFormFeePercent = _newPlatFormFeePercent;
     }
 
     /**
-     *@dev Method to
+     *@dev Method to Buy NFT and Mint NFT.
      * @notice This method is used to Buy NFT.
      *@param sellerDetails: the seller details provide all the necessary detail for the seller.
      */
@@ -117,8 +134,8 @@ contract FlatSale is Initializable, OwnableUpgradeable {
         );
 
         /// transfer seller amount - platformfee
-        uint256 feeOnPlatform = ((sellerDetails.amount * platFormFeePercent) /
-            100) * decimalPrecision;
+        uint256 feeOnPlatform = (sellerDetails.amount * platFormFeePercent) /
+            (100 * decimalPrecision);
 
         instanceERC20.transferFrom(msg.sender, address(this), feeOnPlatform);
 
@@ -130,6 +147,14 @@ contract FlatSale is Initializable, OwnableUpgradeable {
             remaining_amount
         );
 
+        emit flatSale(
+            sellerDetails.nonce,
+            sellerDetails.sellerAddress,
+            sellerDetails.tokenId,
+            sellerDetails.assetAddress,
+            sellerDetails.amount
+        );
+        
         /// nonce is ture
         isNonceProcessed[sellerDetails.nonce] = true;
     }

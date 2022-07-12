@@ -2,14 +2,14 @@ const { expect } = require('chai');
 const Web3 = require('web3');
 const hre = require('hardhat');
 const { ethers } = require('ethers');
-let seller, flatSale, web3, buyer, add1, add2, tokenId, myToken;
+let seller, flatSale, web3, buyer, add1, add2,add4, myToken, decimalPrecision = 100;
 
 describe('FlatSale', () => {
   before(async () => {
     web3 = new Web3(Web3.givenProvider || 'HTTP://127.0.0.1:8545');
 
     accounts = await hre.ethers.getSigners();
-    [seller, buyer, add1, add2, flatSale, tokenId, add3, _] = accounts;
+    [seller, buyer, add1, add2, flatSale, tokenId, add3, add4, _] = accounts;
 
     // NFT721 Deployed
     let MyNFT = await hre.ethers.getContractFactory("MyNFT");
@@ -19,27 +19,23 @@ describe('FlatSale', () => {
     });
     await myNFT.deployed();
 
-    console.log("MyNFT deployed to:", myNFT.address);
-
     // Weth Deployed
     WETH = await hre.ethers.getContractFactory('WETH');
     weth = await WETH.deploy();
     await weth.deployed();
-    console.log('WETH deployed to:', weth.address);
 
     //ERC20Token DEPLOYED
-    const ERC20Token = await hre.ethers.getContractFactory("ERC20Token");
+    ERC20Token = await hre.ethers.getContractFactory("ERC20Token");
     myToken = await ERC20Token.deploy("10000000000000000000000000")
-
     await myToken.deployed();
 
-    console.log("ERC20Token deployed to:", myToken.address);
-
-    //Deployed Token
-    let FlatSale = await hre.ethers.getContractFactory('FlatSale');
-    flatSale = await FlatSale.deploy();
+// We get the contract to deploy
+    FlatSale = await hre.ethers.getContractFactory('FlatSale');
+    flatSale = await upgrades.deployProxy(FlatSale, [], {
+      initializer: "initialize",
+    });
     await flatSale.deployed();
-    console.log('FlatSale deployed to:', flatSale.address);
+
   });
 
   describe('lazy buy success cases', () => {
@@ -57,7 +53,7 @@ describe('FlatSale', () => {
 
       await weth.connect(buyer).approve(flatSale.address, 2000);
 
-      const LAZY = await flatSale
+      LAZY = await flatSale
         .connect(buyer)
         .lazyBuy([
           nonce,
@@ -93,7 +89,7 @@ describe('FlatSale', () => {
 
       await weth.connect(add1).approve(flatSale.address, 2000);
 
-      const LAZY = await flatSale
+      LAZY = await flatSale
         .connect(add1)
         .lazyBuy([
           nonce,
@@ -106,9 +102,6 @@ describe('FlatSale', () => {
           sign,
           'abhi',
         ]);
-
-      // let lazy = await LAZY.wait()
-      // console.log(lazy.events[0].topics, lazy.events[1].topics, lazy.events[2].topics)
 
       expect(await myNFT.ownerOf(1)).to.be.equal(add1.address);
       expect(await myNFT.balanceOf(add1.address)).to.be.equal(1);
@@ -129,7 +122,7 @@ describe('FlatSale', () => {
 
       await myToken.connect(add2).approve(flatSale.address, 2000);
 
-      const LAZY = await flatSale
+      LAZY = await flatSale
         .connect(add2)
         .lazyBuy([
           nonce,
@@ -142,9 +135,6 @@ describe('FlatSale', () => {
           sign,
           'abhi',
         ]);
-
-      // let lazy = await LAZY.wait()
-      // console.log(lazy.events[0].topics, lazy.events[1].topics, lazy.events[2].topics)
 
       expect(await myNFT.ownerOf(1)).to.be.equal(add2.address);
       expect(await myNFT.balanceOf(add2.address)).to.be.equal(1);
@@ -255,9 +245,6 @@ describe('FlatSale', () => {
       expect(await flatSale.getSigner(messageHash, sign)).to.be.equal(
         buyer.address
       );
-
-      // await weth.connect(add1).deposit({ value: '100' });
-
       await myNFT.connect(buyer).setApprovalForAll(flatSale.address, true);
 
       await weth.connect(add1).approve(flatSale.address, 2000);
@@ -330,10 +317,54 @@ describe('FlatSale', () => {
           '0',
           '400',
           2000,
-          "0xaa2fe5bd50daa6b9adc22a3aff601f52c3b81649a250106d49e96594e67c72264c9bf638289a2158113f6def1cccfb7369599039e6221b9d6b5970496431ae3a",
+          "0xaa2fe5bd50daa6b9adc22a3aff601f52c3b81649a250106d49e96594e6772264c9bf638289a158113f6def1cccfb7369599039e6221b9d6b5970496431ae3a",
           'abhi',
         ])).to.be.revertedWith("FlatSale: invalid signature length.");
     });
   });
+  describe('lazy buy brokerage.', () => {
+    it('should check lazy buy brokerage', async () => {
+      let amount = ethers.utils.parseEther("1")
+      let platFormFeePercent = 250;
+    
+
+      let message = ethers.utils.solidityPack(
+        ['address', 'uint256', 'string', 'address', 'uint256'],
+        [myNFT.address, '1', 'abhi', weth.address, amount]
+      );
+      let messageHash = ethers.utils.keccak256(message);
+      let sign = await web3.eth.sign(messageHash, add2.address);
+      let nonce = 9;
+
+      await weth.connect(add4).deposit({ value: amount });
+      await myNFT.connect(add2).setApprovalForAll(flatSale.address, true);
+
+      await weth.connect(add4).approve(flatSale.address, amount);
+       let oldAmountFlatsale = await weth.balanceOf(flatSale.address)
+       let oldAmountSeller = await weth.balanceOf(add2.address)
+
+      LAZY = await flatSale
+      .connect(add4)
+      .lazyBuy([
+        nonce,
+        add2.address,
+        myNFT.address,
+        weth.address,
+        '1',
+        '400',
+        amount,
+        sign,
+        'abhi',
+      ]);
+    
+      let platFormFee = ((amount.mul(new ethers.BigNumber.from(platFormFeePercent))).div(new ethers.BigNumber.from("100")*decimalPrecision));
+      let remaining_amount = amount.sub(platFormFee);
+      
+      expect(await weth.balanceOf(flatSale.address)).to.be.equal(oldAmountFlatsale.add(platFormFee));
+
+      expect(await weth.balanceOf(add2.address)).to.be.equal(oldAmountSeller.add(remaining_amount));
+    
+      })
+    });
 });
 
