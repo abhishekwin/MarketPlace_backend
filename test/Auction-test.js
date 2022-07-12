@@ -19,9 +19,9 @@ describe("Auction", () => {
 
 
     // NFT721
-    let MyNFT = await hre.ethers.getContractFactory("MyNFT");
+    let ERC721Token = await hre.ethers.getContractFactory("ERC721Token");
 
-    myNFT = await upgrades.deployProxy(MyNFT, [500], {
+    myNFT = await upgrades.deployProxy(ERC721Token, [500], {
       initializer: "initialize",
     });
     await myNFT.deployed();

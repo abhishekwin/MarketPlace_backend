@@ -87,11 +87,7 @@ describe("ERC721Token", () => {
   });
 
   describe("Checking that getApproved function", () => {
-<<<<<<< HEAD
-    it("Should check tokenId approved or not", async () => {
-=======
     it("Should check tokenId address", async () => {
->>>>>>> d0b7d6e5556d576c49d58463b54277c9bf181dfc
       await expect(
         erc721Token.connect(add1.address).getApproved(2)
       ).to.be.revertedWith("ERC721: invalid token ID");

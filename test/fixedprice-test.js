@@ -12,9 +12,9 @@ describe('FlatSale', () => {
     [seller, buyer, add1, add2, flatSale, tokenId, add3, add4, _] = accounts;
 
     // NFT721 Deployed
-    let MyNFT = await hre.ethers.getContractFactory("MyNFT");
+    let ERC721Token = await hre.ethers.getContractFactory("ERC721Token");
 
-    myNFT = await upgrades.deployProxy(MyNFT, [500], {
+    myNFT = await upgrades.deployProxy(ERC721Token, [500], {
       initializer: "initialize",
     });
     await myNFT.deployed();
