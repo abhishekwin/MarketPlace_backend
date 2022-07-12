@@ -1,6 +1,6 @@
 const { expect } = require("chai");
-const { ethers } = require("hardhat");
-const hre = require("hardhat");
+
+const {hre,ethers} = require("hardhat");
 const Web3 = require("web3");
 
 let userA, userC, userD, auction, weth, myNFT, sellerSign, winnerSign;
@@ -13,13 +13,13 @@ describe("Auction", () => {
     web3 = new Web3(Web3.givenProvider || "HTTP://127.0.0.1:8545");
     // solditypack = new solidityPack(solidityPack.givenProvider);
 
-    accounts = await hre.ethers.getSigners();
+    accounts = await ethers.getSigners();
 
     [userA, userB, userC, userD, userE, _] = accounts;
 
 
     // NFT721
-    let ERC721Token = await hre.ethers.getContractFactory("ERC721Token");
+    let ERC721Token = await ethers.getContractFactory("ERC721Token");
 
     myNFT = await upgrades.deployProxy(ERC721Token, [500], {
       initializer: "initialize",
@@ -27,20 +27,20 @@ describe("Auction", () => {
     await myNFT.deployed();
 
     // WETH deployed
-    WETH = await hre.ethers.getContractFactory("WETH");
+    WETH = await ethers.getContractFactory("WETH");
     weth = await WETH.deploy();
 
     await weth.deployed();
 
 
     // myToken token deployed
-    const ERC20Token = await hre.ethers.getContractFactory("ERC20Token");
+    const ERC20Token = await ethers.getContractFactory("ERC20Token");
     myToken = await ERC20Token.deploy("4000000000000000000")
     await myToken.deployed();
 
 
     //Deployed Contract
-    Auction = await hre.ethers.getContractFactory("Auction");
+    Auction = await ethers.getContractFactory("Auction");
     auction = await upgrades.deployProxy(Auction, [], {
       initializer: "initialize",
     });

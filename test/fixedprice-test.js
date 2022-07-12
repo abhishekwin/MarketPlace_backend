@@ -1,18 +1,18 @@
 const { expect } = require('chai');
 const Web3 = require('web3');
-const hre = require('hardhat');
-const { ethers } = require('ethers');
-let seller, flatSale, web3, buyer, add1, add2,add4, myToken, decimalPrecision = 100;
+const {ethers} = require('hardhat');
+
+let seller, flatSale, buyer, add1, add2,add4, myToken, decimalPrecision = 100;
 
 describe('FlatSale', () => {
   before(async () => {
     web3 = new Web3(Web3.givenProvider || 'HTTP://127.0.0.1:8545');
 
-    accounts = await hre.ethers.getSigners();
+    accounts = await ethers.getSigners();
     [seller, buyer, add1, add2, flatSale, tokenId, add3, add4, _] = accounts;
 
     // NFT721 Deployed
-    let ERC721Token = await hre.ethers.getContractFactory("ERC721Token");
+    let ERC721Token = await ethers.getContractFactory("ERC721Token");
 
     myNFT = await upgrades.deployProxy(ERC721Token, [500], {
       initializer: "initialize",
@@ -20,17 +20,17 @@ describe('FlatSale', () => {
     await myNFT.deployed();
 
     // Weth Deployed
-    WETH = await hre.ethers.getContractFactory('WETH');
+    WETH = await ethers.getContractFactory('WETH');
     weth = await WETH.deploy();
     await weth.deployed();
 
     //ERC20Token DEPLOYED
-    ERC20Token = await hre.ethers.getContractFactory("ERC20Token");
+    ERC20Token = await ethers.getContractFactory("ERC20Token");
     myToken = await ERC20Token.deploy("10000000000000000000000000")
     await myToken.deployed();
 
 // We get the contract to deploy
-    FlatSale = await hre.ethers.getContractFactory('FlatSale');
+    FlatSale = await ethers.getContractFactory('FlatSale');
     flatSale = await upgrades.deployProxy(FlatSale, [], {
       initializer: "initialize",
     });
