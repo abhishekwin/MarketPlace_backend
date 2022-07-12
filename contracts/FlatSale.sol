@@ -8,7 +8,7 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
 
 contract FlatSale is Initializable, OwnableUpgradeable {
-    ///Creating Seller Details Struct.
+    //Creating Seller Details Struct.
     struct SellerDetails {
         uint256 nonce; //set the nonce.
         address sellerAddress; //set the seller address.
@@ -21,7 +21,7 @@ contract FlatSale is Initializable, OwnableUpgradeable {
         string tokenUri; //set the token URI.
     }
 
-    ///Events
+    //Events
     event flatSale(
         uint256 nonce,
         address seller,
@@ -30,7 +30,7 @@ contract FlatSale is Initializable, OwnableUpgradeable {
         uint256 amount
     );
 
-    mapping(uint256 => bool) public isNonceProcessed; ///mapping for nonce.
+    mapping(uint256 => bool) public isNonceProcessed; //mapping for nonce.
 
     uint256 platFormFeePercent; /// State variable for PlatFormFeePercent.
 
@@ -56,7 +56,7 @@ contract FlatSale is Initializable, OwnableUpgradeable {
 
     /**
      *@dev Method to Buy NFT and Mint NFT.
-     * @notice This method is used to Buy NFT.
+     *@notice This method is used to Buy NFT.
      *@param sellerDetails: the seller details provide all the necessary detail for the seller.
      */
     function lazyBuy(SellerDetails calldata sellerDetails) external {
@@ -64,7 +64,7 @@ contract FlatSale is Initializable, OwnableUpgradeable {
             !isNonceProcessed[sellerDetails.nonce],
             "FlatSale: nonce already process"
         );
-        /// validate seller
+        // validate seller
         address signer = verifySellerSign(
             sellerDetails.tokenId,
             sellerDetails.tokenUri,
@@ -79,10 +79,10 @@ contract FlatSale is Initializable, OwnableUpgradeable {
             "FlatSale: seller sign verification failed"
         );
 
-        ///creating instance
+        // creating instance
         IERC721Mint instance = IERC721Mint(sellerDetails.assetAddress);
 
-        /// cheking nft is minted or not.
+        // cheking nft is minted or not.
         if (sellerDetails.tokenId > 0) {
             require(
                 instance.isApprovedForAll(
@@ -118,8 +118,8 @@ contract FlatSale is Initializable, OwnableUpgradeable {
                 tokenId
             );
         }
-        /// Write Fund Tranfer Code
-        ///creating IERC20 instance
+        // Write Fund Tranfer Code
+        // creating IERC20 instance
         IERC20 instanceERC20 = IERC20(sellerDetails.paymentAssetAddress);
 
         require(
@@ -133,7 +133,7 @@ contract FlatSale is Initializable, OwnableUpgradeable {
             "FlatSale: Check the token allowance."
         );
 
-        /// transfer seller amount - platformfee
+        // transfer seller amount - platformfee
         uint256 feeOnPlatform = (sellerDetails.amount * platFormFeePercent) /
             (100 * decimalPrecision);
 
