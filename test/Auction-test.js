@@ -41,8 +41,11 @@ describe("Auction", () => {
 
     //Deployed Contract
     Auction = await hre.ethers.getContractFactory("Auction");
-    auction = await Auction.deploy();
+    auction = await upgrades.deployProxy(Auction, [], {
+      initializer: "initialize",
+    });
     await auction.deployed();
+    console.log("auction deployed to:", auction.address);
   });
  
   // test cases lazyAuction success cases.

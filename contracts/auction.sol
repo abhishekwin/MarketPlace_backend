@@ -59,7 +59,7 @@ contract Auction is Initializable, OwnableUpgradeable {
      * @notice This method allows authorised users to set platform fee
      * @param _newPlatFormFeePercent: Setting the new platform fees.
      */
-    function setPlatFormFeePercent(uint256 _newPlatFormFeePercent) public {
+    function setPlatFormFeePercent(uint256 _newPlatFormFeePercent) public onlyOwner {
         platFormFeePercent = _newPlatFormFeePercent;
     }
 
