@@ -1,9 +1,9 @@
-./node_modules
+node_modules
 .env
-./coverage
+coverage
 coverage.json
-./typechain
+typechain
 #Hardhat files
-/cache
-./artifacts
+cache
+artifacts
 .openzeppelin
