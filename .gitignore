@@ -6,9 +6,5 @@ typechain
 #Hardhat files
 cache
 artifacts
-<<<<<<< HEAD
-.openzeppelin
-=======
 .openzepplin
->>>>>>> c5c8eceffaef2dbf63d8136fb75e53d8168aba30
 .DS_Store
