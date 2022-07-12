@@ -7,18 +7,21 @@ const hre = require("hardhat");
 const { upgrades } = require("hardhat");
 
 async function main() {
-const ERC721Token = await hre.ethers.getContractFactory("ERC721Token");
-  
-  const erc721Token = await upgrades.upgradeProxy("0x57A5BC0ec9a36F2cf6d9d9e3e01133cF5BD33316",ERC721Token )
+  const ERC721Token = await hre.ethers.getContractFactory("ERC721Token");
+
+  const erc721Token = await upgrades.upgradeProxy(
+    "0x4d1FC9702Df160A5f91ba968FC084fb014112649",
+    ERC721Token
+  );
   await erc721Token.deployed();
   console.log("ERC721Token Updated");
-  }
+}
 
-  // We recommend this pattern to be able to use async/await everywhere
+// We recommend this pattern to be able to use async/await everywhere
 // and properly handle errors.
 main()
-.then(() => process.exit(0))
-.catch((error) => {
-  console.error(error);
-  process.exit(1);
-});
+  .then(() => process.exit(0))
+  .catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });

@@ -2,19 +2,19 @@
   "manifestVersion": "3.2",
   "admin": {
     "address": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
-    "txHash": "0xe9c51788ec9092a9efbb2289b30110136527cab4de62176ecb5c6d82f3302878"
+    "txHash": "0x32c3d8ad170fda837e5f7f5322d959f4f0416fcf686d411668da30d314d3a644"
   },
   "proxies": [
     {
       "address": "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
-      "txHash": "0x443dbb6021aded65a9a9518b20be20347edde16e4d307adb3564609ece57894b",
+      "txHash": "0xc2895e87bb5c6a8c20d2d4cce6b04ce966cb092e472d68abec93f36e63d08fdc",
       "kind": "transparent"
     }
   ],
   "impls": {
-    "528b3345258c31ea614c7491c9e9fd5e8859952f59c7379dd08c346d45047820": {
+    "f5856a4ae0c040ce2f2e35337207d7398f53c3d2e053959e7f235232fde3625f": {
       "address": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
-      "txHash": "0x2c35ef1daf1d6b16b0ec8924e4a407c8cd0b548adc29b6653b1d0a6d46a63680",
+      "txHash": "0xe47f152b0a0191f034f60d85dbfa5aed9a4992bbdea021d584f3897ad41a57ed",
       "layout": {
         "storage": [
           {
@@ -248,7 +248,7 @@
             "slot": "551",
             "type": "t_struct(Counter)2669_storage",
             "contract": "ERC721Token",
-            "src": "contracts/ERC721Token.sol:26"
+            "src": "contracts/ERC721Token.sol:24"
           },
           {
             "label": "maximumRoyality",
@@ -256,7 +256,7 @@
             "slot": "552",
             "type": "t_uint96",
             "contract": "ERC721Token",
-            "src": "contracts/ERC721Token.sol:28"
+            "src": "contracts/ERC721Token.sol:26"
           }
         ],
         "types": {

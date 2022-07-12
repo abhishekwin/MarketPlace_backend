@@ -40,8 +40,8 @@
       ]
     },
     "/Users/dr.mac/Desktop/blockchain-project/Marketplace/node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol": {
-      "lastModificationDate": 1655823439460,
-      "contentHash": "a9d2146925da52142435d3bb8df53c3c",
+      "lastModificationDate": 1657522597204,
+      "contentHash": "af7bd64e1cfefbf6cb07f2adc1a25392",
       "sourceName": "@openzeppelin/contracts/token/ERC20/ERC20.sol",
       "solcConfig": {
         "version": "0.8.4",
@@ -190,8 +190,8 @@
       ]
     },
     "/Users/dr.mac/Desktop/blockchain-project/Marketplace/contracts/ERC721Token.sol": {
-      "lastModificationDate": 1657203041968,
-      "contentHash": "f7cce920c1683acea1a11b9a8df6f445",
+      "lastModificationDate": 1657523285089,
+      "contentHash": "de51cd05a36f2842406e5b6196e6a0e2",
       "sourceName": "contracts/ERC721Token.sol",
       "solcConfig": {
         "version": "0.8.4",

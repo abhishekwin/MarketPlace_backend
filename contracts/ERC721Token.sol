@@ -23,7 +23,7 @@ contract ERC721Token is
     using CountersUpgradeable for CountersUpgradeable.Counter;
     CountersUpgradeable.Counter private _tokenIds;
 
-    uint96 public maximumRoyality; //Set the maximum Royality.
+    uint96 public maximumRoyality; ///Set the maximum Royality.
 
     function initialize(uint96 _maxRoyality) public initializer {
         __ERC721_init("MarketPlace", "MKP");
@@ -68,9 +68,23 @@ contract ERC721Token is
         return newItemId;
     }
 
+    /**
+     * @dev Method to set maximum royality, allowed only to contract owner.
+     * @notice  This method is used to set maximum royality.
+     * @param _value: MaximunRoyality value to be set in this method.
+     */
+
     function setMaximumRoyality(uint96 _value) external onlyOwner {
         maximumRoyality = _value;
     }
+
+    /**
+     * @dev Method to be called before any token transfer
+     * @notice  This method is used to before any token transfer.
+     * @param from: When from is zero, tokenId will be minted for to.
+     * @param to: When to is zero, from tokenId will be burned.
+     * @param tokenId: tokenId to be transfer.
+     */
 
     function _beforeTokenTransfer(
         address from,
@@ -88,6 +102,12 @@ contract ERC721Token is
         super._beforeTokenTransfer(from, to, tokenId);
     }
 
+    /**
+     * @dev Method to burn the tokenid.
+     * @notice  This method is used to burn the tokenId.
+     * @param tokenId: tokenId to be burn.
+     */
+
     function _burn(uint256 tokenId)
         internal
         virtual
@@ -99,6 +119,12 @@ contract ERC721Token is
     {
         return super._burn(tokenId);
     }
+
+    /**
+     * @dev Method to supportInterface.
+     * @notice  This method is used to supportInterface.
+     * @param interfaceId: interfaceId of the interface.
+     */
 
     function supportsInterface(bytes4 interfaceId)
         public
@@ -113,6 +139,12 @@ contract ERC721Token is
     {
         return super.supportsInterface(interfaceId);
     }
+
+    /**
+     * @dev Method to call TokenURI.
+     * @notice  This method is used to know the tokenURI.
+     * @param tokenId: tokenId of the TokenURI.
+     */
 
     function tokenURI(uint256 tokenId)
         public
