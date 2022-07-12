@@ -4,7 +4,8 @@
     "@openzeppelin/contracts": "^4.6.0",
     "@openzeppelin/contracts-upgradeable": "^4.6.0",
     "@openzeppelin/hardhat-upgrades": "^1.19.0",
-    "@openzeppelin/upgrades": "^2.8.0"
+    "@openzeppelin/upgrades": "^2.8.0",
+    "web3": "^1.7.4"
   },
   "name": "contract",
   "version": "1.0.0",
