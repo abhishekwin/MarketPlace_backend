@@ -21,19 +21,28 @@ const rinkeby_api_key = "K63V19BYNUEP2EEIKIZYE1CGWY85SCRF41"
  */
 module.exports = {
 
-
-
   solidity: {
     compilers: [
       {
-        version: "0.8.14",
+        version: "0.8.1",
         settings: {
           optimizer: {
             enabled: true,
-            runs: 200,
-          },
-        },
+            runs: 200
+          }
+        }
       },
+      {
+        version: "0.8.2",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 200
+          }
+        }
+      },
+
+
       {
         version: "0.4.18",
         settings: {
@@ -41,10 +50,13 @@ module.exports = {
             enabled: true,
             runs: 200
           }
-        },
+        }
       }
-    ],
+    ]
   },
+
+
+
   networks: {
     rinkeby: {
       url: `https://rinkeby.infura.io/v3/328ff9ac7ccf4b8b98de2b55b4047bd6`,
@@ -60,8 +72,6 @@ module.exports = {
 
 
 
-//0xfd67a1a3757b296c1ac016254f3be36adaaba6f6  ropsten mytoken proxy per
-// 0x57A5BC0ec9a36F2cf6d9d9e3e01133cF5BD33316  rinkeby
+//0xb77a802Fd7d0c6628B4A664Ac8760e3E263B86E9 ropsten mytoken proxy per
+// 0x94fdc47621bd04798fe31e6ed280293f14d57b27  mytoken conrtract tem
 // 0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0   localhost
-//0x8348750544C075b8c1F10d05dE2594FfCe6E3174 rinkeby weth
-
