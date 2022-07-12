@@ -1,4 +1,3 @@
-// contracts/MyNFT.sol
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
@@ -12,7 +11,11 @@ import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721Pausab
 import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721RoyaltyUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
+<<<<<<< HEAD
 contract MyNFT is
+=======
+contract ERC721Token is
+>>>>>>> c1720a9d27fa30920ab665101d6e7b621c541d9e
     ERC721Upgradeable,
     OwnableUpgradeable,
     ERC721URIStorageUpgradeable,
@@ -24,22 +27,27 @@ contract MyNFT is
     using CountersUpgradeable for CountersUpgradeable.Counter;
     CountersUpgradeable.Counter private _tokenIds;
 
-    uint96 public maximumRoyality; //Set the maximum Royality.
+    uint96 public maximumRoyality; ///Set the maximum Royality.
 
     function initialize(uint96 _maxRoyality) public initializer {
         __ERC721_init("MarketPlace", "MKP");
+        __ERC721Burnable_init();
+        __ERC721Enumerable_init();
+        __ERC721Pausable_init();
+        __ERC721Royalty_init();
+        __ERC721URIStorage_init();
         __Ownable_init();
         _tokenIds.increment();
-
         maximumRoyality = _maxRoyality;
     }
 
     /**
-     * @dev Method to mint nft This Function is used to Mint NFT.
+     * @dev  This Function is used to Mint NFT.
      * @notice  This method is used to Mint NFT.
      * @param to: Address who get NFT.
      * @param tokenURI: NFT String URI.
      * @param _royality: Percentage of creator.
+     * @return tokenId: return the tokenId of the nft.
      */
 
     function mint(
@@ -47,8 +55,14 @@ contract MyNFT is
         string memory tokenURI,
         uint96 _royality
     ) external returns (uint256) {
-        require(_royality <= maximumRoyality, "MyNFT: Royality should be less");
-        require(address(to) != address(0), "MyNFT: to address can't be 0x0");
+        require(
+            _royality <= maximumRoyality,
+            "ERC721Token: Royality should be less"
+        );
+        require(
+            address(to) != address(0),
+            "ERC721Token: to address can't be 0x0"
+        );
         uint256 newItemId = _tokenIds.current();
 
         _mint(to, newItemId);
@@ -59,9 +73,23 @@ contract MyNFT is
         return newItemId;
     }
 
+    /**
+     * @dev Method to set maximum royality, allowed only to contract owner.
+     * @notice  This method is used to set maximum royality.
+     * @param _value: MaximunRoyality value to be set in this method.
+     */
+
     function setMaximumRoyality(uint96 _value) external onlyOwner {
         maximumRoyality = _value;
     }
+
+    /**
+     * @dev Method to be called before any token transfer
+     * @notice  This method is used to before any token transfer.
+     * @param from: When from is zero, tokenId will be minted for to.
+     * @param to: When to is zero, from tokenId will be burned.
+     * @param tokenId: tokenId to be transfer.
+     */
 
     function _beforeTokenTransfer(
         address from,
@@ -75,7 +103,15 @@ contract MyNFT is
             ERC721PausableUpgradeable,
             ERC721Upgradeable
         )
-    {}
+    {
+        super._beforeTokenTransfer(from, to, tokenId);
+    }
+
+    /**
+     * @dev Method to burn the tokenid.
+     * @notice  This method is used to burn the tokenId.
+     * @param tokenId: tokenId to be burn.
+     */
 
     function _burn(uint256 tokenId)
         internal
@@ -88,6 +124,13 @@ contract MyNFT is
     {
         return super._burn(tokenId);
     }
+
+    /**
+     * @dev Method to supportInterface.
+     * @notice  This method is used to supportInterface.
+     * @param interfaceId: interfaceId of the interface.
+     * @return : return true or false.
+     */
 
     function supportsInterface(bytes4 interfaceId)
         public
@@ -103,6 +146,13 @@ contract MyNFT is
         return super.supportsInterface(interfaceId);
     }
 
+    /**
+     * @dev Method to call TokenURI.
+     * @notice  This method is used to know the tokenURI.
+     * @param tokenId: tokenId of the TokenURI.
+     * @return : return tokenURI of the tokenId
+     */
+
     function tokenURI(uint256 tokenId)
         public
         view
@@ -113,3 +163,4 @@ contract MyNFT is
         return super.tokenURI(tokenId);
     }
 }
+ 

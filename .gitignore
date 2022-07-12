@@ -1,4 +1,4 @@
-node_modules
+/node_modules
 .env
 coverage
 coverage.json
@@ -6,4 +6,8 @@ typechain
 #Hardhat files
 cache
 artifacts
+<<<<<<< HEAD:.gitignore
 .openzeppelin
+=======
+.openzepplin
+>>>>>>> 01d7da482b20aefce03c909564f912c52a4de9c8:node_modules/hardhat/recommended-gitignore.txt

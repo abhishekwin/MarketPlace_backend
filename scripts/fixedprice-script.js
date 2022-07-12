@@ -3,7 +3,7 @@
 //
 // When running the script with `npx hardhat run <script>` you'll find the Hardhat
 // Runtime Environment's members available in the global scope.
-const hre = require("hardhat");
+const hre = require('hardhat');
 const { ethers, upgrades } = require("hardhat");
 
 async function main() {
@@ -14,31 +14,26 @@ async function main() {
   // manually to make sure everything is compiled
   // await hre.run('compile');
 
-<<<<<<<< HEAD:scripts/token721-script.js
-  // const MyNFT = await hre.ethers.getContractFactory("MyNFT");
-  // const myNFT = await MyNFT.deploy("500");
-
-  // await myNFT.deployed();
-
-  // console.log("MyNFT deployed to:", myNFT.address);
-
-  const MyNFT = await hre.ethers.getContractFactory("MyNFT");
-  const myNFT = await upgrades.deployProxy(MyNFT, [500], {
-    initializer: "initialize",
-  });
-  
-  await myNFT.deployed();
-  console.log("MyNFT deployed to:", myNFT.address);
-========
   // We get the contract to deploy
-  const Auction = await hre.ethers.getContractFactory("Auction");
-  const auction = await upgrades.deployProxy(Auction, [], {
+  const FlatSale = await hre.ethers.getContractFactory('FlatSale');
+  const flatSale = await upgrades.deployProxy(FlatSale, [], {
     initializer: "initialize",
   });
-  await auction.deployed();
-  console.log("auction deployed to:", auction.address);
->>>>>>>> d0b7d6e5556d576c49d58463b54277c9bf181dfc:scripts/Auction-script.js
+
+  await flatSale.deployed();
+
+  console.log('FlatSale deployed to:', flatSale.address);
+  
+
+const WETH = await hre.ethers.getContractFactory('WETH');
+
+const weth = await WETH.deploy();
+
+await weth.deployed();
+
+console.log('WETH deployed to:', weth.address);
 }
+
 // We recommend this pattern to be able to use async/await everywhere
 // and properly handle errors.
 main()
@@ -47,4 +42,3 @@ main()
     console.error(error);
     process.exit(1);
   });
-

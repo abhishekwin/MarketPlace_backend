@@ -14,6 +14,8 @@ async function main() {
   // manually to make sure everything is compiled
   // await hre.run('compile');
 
+<<<<<<< HEAD
+<<<<<<<< HEAD:scripts/token721-script.js
   // const MyNFT = await hre.ethers.getContractFactory("MyNFT");
   // const myNFT = await MyNFT.deploy("500");
 
@@ -28,6 +30,24 @@ async function main() {
   
   await myNFT.deployed();
   console.log("MyNFT deployed to:", myNFT.address);
+========
+  // We get the contract to deploy
+  const Auction = await hre.ethers.getContractFactory("Auction");
+  const auction = await upgrades.deployProxy(Auction, [], {
+    initializer: "initialize",
+  });
+  await auction.deployed();
+  console.log("auction deployed to:", auction.address);
+>>>>>>>> d0b7d6e5556d576c49d58463b54277c9bf181dfc:scripts/Auction-script.js
+=======
+  const ERC721Token = await hre.ethers.getContractFactory("ERC721Token");
+  const erc721Token = await upgrades.deployProxy(ERC721Token, [500], {
+    initializer: "initialize",
+  });
+  
+  await erc721Token.deployed();
+  console.log("ERC721Token deployed to:", erc721Token.address);
+>>>>>>> c1720a9d27fa30920ab665101d6e7b621c541d9e
 }
 // We recommend this pattern to be able to use async/await everywhere
 // and properly handle errors.
@@ -37,3 +57,4 @@ main()
     console.error(error);
     process.exit(1);
   });
+
