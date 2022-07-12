@@ -21,8 +21,48 @@ const rinkeby_api_key = "K63V19BYNUEP2EEIKIZYE1CGWY85SCRF41";
  * @type import('hardhat/config').HardhatUserConfig
  */
 module.exports = {
-  solidity: "0.8.0",
-  solidity: "0.8.4",
+  solidity: {
+    compilers: [
+      {
+        version: "0.8.0",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 200,
+          },
+        },
+      },
+      {
+        version: "0.8.1",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 200,
+          },
+        },
+      },
+      {
+        version: "0.8.2",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 200,
+          },
+        },
+      },
+      {
+        version: "0.4.18",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 200
+          }
+        },
+      }
+    ],
+  },
+
+
   networks: {
     rinkeby: {
       url: `https://rinkeby.infura.io/v3/328ff9ac7ccf4b8b98de2b55b4047bd6`,
