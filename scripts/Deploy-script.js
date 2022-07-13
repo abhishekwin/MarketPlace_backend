@@ -4,16 +4,21 @@
 // When running the script with `npx hardhat run <script>` you'll find the Hardhat
 // Runtime Environment's members available in the global scope.
 const hre = require("hardhat");
-const { ethers, upgrades } = require("hardhat");
+const { ethers, upgrades, network } = require("hardhat");
 
 async function main() {
-  // ERC20
+
+
+  if(network !== 'rinkeby'){
+// ERC20
   const ERC20Token = await hre.ethers.getContractFactory("ERC20Token");
   const myToken = await ERC20Token.deploy("1000");
 
   await myToken.deployed();
 
   console.log("ERC20Token deployed to:", myToken.address);
+
+  }
 
   // ERC721
   const ERC721Token = await hre.ethers.getContractFactory("ERC721Token");
