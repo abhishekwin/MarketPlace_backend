@@ -1,12 +1,14 @@
 const { expect } = require('chai');
-const Web3 = require('web3');
+// const Web3 = require('web3');
+const { ethers,web3 } = require('hardhat');
 const hre = require('hardhat');
-const { ethers } = require('ethers');
-let seller, flatSale, web3, buyer, add1, add2,add4, myToken, decimalPrecision = 100;
+require("@nomiclabs/hardhat-web3");
+
+let seller, flatSale, buyer, add1, add2,add4, myToken, decimalPrecision = 100;
 
 describe('FlatSale', () => {
   before(async () => {
-    web3 = new Web3(Web3.givenProvider || 'HTTP://127.0.0.1:8545');
+    // web3 = new Web3(Web3.givenProvider || 'HTTP://127.0.0.1:8545');
 
     accounts = await hre.ethers.getSigners();
     [seller, buyer, add1, add2, flatSale, tokenId, add3, add4, _] = accounts;

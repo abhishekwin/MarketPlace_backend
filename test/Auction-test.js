@@ -1,7 +1,8 @@
 const { expect } = require("chai");
-const { ethers } = require("hardhat");
+const { ethers,web3 } = require("hardhat");
 const hre = require("hardhat");
-const Web3 = require("web3");
+// const Web3 = require("web3"); 
+require("@nomiclabs/hardhat-web3");
 
 let userA, userC, userD, auction, weth, myNFT, sellerSign, winnerSign;
 let royality = 20, nonce = 1, startTime = Math.floor(Date.now() / 1000);
@@ -10,9 +11,8 @@ let endTime = Math.floor(Date.now() / 1000) + 200, bidTime = 200;
 
 describe("Auction", () => {
   before(async () => {
-    web3 = new Web3(Web3.givenProvider || "HTTP://127.0.0.1:8545");
-    // solditypack = new solidityPack(solidityPack.givenProvider);
 
+  
     accounts = await hre.ethers.getSigners();
 
     [userA, userB, userC, userD, userE, _] = accounts;
