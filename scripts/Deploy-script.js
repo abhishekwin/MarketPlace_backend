@@ -29,23 +29,16 @@ async function main() {
   await erc721Token.deployed();
   console.log("ERC721Token deployed to:", erc721Token.address);
 
-  // FlatSale
-  const FlatSale = await hre.ethers.getContractFactory("FlatSale");
-  const flatSale = await upgrades.deployProxy(FlatSale, [], {
-    initializer: "initialize",
-  });
-
-  await flatSale.deployed();
-  console.log("FlatSale deployed to:", flatSale.address);
-
-  // Auction
-  const Auction = await hre.ethers.getContractFactory("Auction");
-  const auction = await upgrades.deployProxy(Auction, [], {
-    initializer: "initialize",
-  });
-
-  await auction.deployed();
-  console.log("auction deployed to:", auction.address);
+    // MarketPlace
+    const MarketPlace = await hre.ethers.getContractFactory("MarketPlace");
+    const marketPlace = await upgrades.deployProxy(MarketPlace, [], {
+      initializer: "initialize",
+    });
+  
+    await flatSale.deployed();
+    console.log("MarketPlace deployed to:", marketPlace.address);
+  
+  
 }
 // We recommend this pattern to be able to use async/await everywhere
 // and properly handle errors.

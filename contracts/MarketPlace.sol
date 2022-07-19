@@ -1,44 +1,51 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
-
 import "@openzeppelin/contracts-upgradeable/token/ERC721/IERC721Upgradeable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "contracts/mocks/interfaces/IERC721Mint.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
-import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
-import "hardhat/console.sol";
 import "@openzeppelin/contracts-upgradeable/utils/math/SafeMathUpgradeable.sol";
 
-contract Auction is Initializable, OwnableUpgradeable {
+contract MarketPlace is Initializable, OwnableUpgradeable {
     using SafeMathUpgradeable for uint256;
-    uint256 public platFormFeePercent;
+    uint256 public platFormFeePercent;  /// State variable for PlatFormFeePercent.
     uint256 public constant decimalPrecision = 100;
 
-    // mapping for nonce
-    mapping(uint256 => bool) public isNonceProcessed;
 
+    //Creating Seller Details Struct.
     struct SellerDetails {
-        address seller;
-        address assetAddress;
-        uint256 tokenId;
-        uint256 amount;
-        address paymentAssetAddress;
-        string URI;
-        bytes seller_signature;
-        uint96 royality;
-        uint256 nonce;
-        uint256 startTime;
-        uint256 endTime;
+        uint256 nonce; //set the nonce.
+        address seller; //set the seller address.
+        address assetAddress; //set the nft address.
+        address paymentAssetAddress; //set the token address.
+        uint256 tokenId; //set the token id.
+        uint96 royality; //set the royality.
+        uint256 amount; //set the amount.
+        bytes seller_signature; //set the seller signature.
+        string tokenUri; //set the token URI.
+        uint256 startTime;//set the startTime
+        uint256 endTime;//set the endTime.
     }
 
+    //Creating Bidder Details Struct.
     struct WinnerDetails {
         address winnerAddress;
         uint256 amount;
         bytes winnerSignature;
         uint256 bidTime;
     }
+    //Events
+    event flatSale(
+        uint256 nonce,
+        address seller,
+        uint256 tokenId,
+        address assetAddress,
+        uint256 amount
+    );
 
+    //Events
     event lazy_Auction(
         uint256 tokenId,
         address assetAddress,
@@ -49,21 +56,126 @@ contract Auction is Initializable, OwnableUpgradeable {
         uint256 endTime
     );
 
-    function initialize() public initializer {
-        __Ownable_init();
-        platFormFeePercent = 1000;
-    }
+    mapping(uint256 => bool) public isNonceProcessed; //mapping for nonce.
 
     /**
-     * @dev This Method to update/reset platFormFeePercent.
-     * @notice This method allows authorised users to set platform fee
-     * @param _newPlatFormFeePercent: Setting the new platform fees.
+     * @dev Method to set platFormFeePercent.
+     * @notice This method initializes the PlatFormFee.
      */
-    function setPlatFormFeePercent(uint256 _newPlatFormFeePercent) public onlyOwner {
+    function initialize() public initializer {
+        __Ownable_init();
+        platFormFeePercent = 250;
+    }
+    
+    /**
+     *@dev Method to update/reset platFormFeePercent.
+     * @notice This method is used to update Plateform Fee.
+     *@param _newPlatFormFeePercent: the new platform fee will be given.
+     */
+    function setPlatFormFeePercent(uint256 _newPlatFormFeePercent) public {
         platFormFeePercent = _newPlatFormFeePercent;
     }
 
     /**
+     *@dev Method to Buy NFT and Mint NFT.
+     *@notice This method is used to Buy NFT.
+     *@param sellerDetails: the seller details provide all the necessary detail for the seller.
+     */
+    function lazyBuy(SellerDetails calldata sellerDetails) external {
+        require(
+            !isNonceProcessed[sellerDetails.nonce],
+            "MarketPlace: nonce already process"
+        );
+        // validate seller
+        address signer = verifySellerSign(
+            sellerDetails);
+
+        require(
+            sellerDetails.seller == signer,
+            "MarketPlace: seller sign verification failed"
+        );
+
+        // creating instance
+        IERC721Mint instance = IERC721Mint(sellerDetails.assetAddress);
+
+        // cheking nft is minted or not.
+        if (sellerDetails.tokenId > 0) {
+            require(
+                instance.isApprovedForAll(
+                    sellerDetails.seller,
+                    address(this)
+                ),
+                "MarketPlace: Collection must be approved."
+            );
+            /// transfer the nft.
+            instance.transferFrom(
+                sellerDetails.seller,
+                msg.sender,
+                sellerDetails.tokenId
+            );
+        } else {
+            uint256 tokenId = instance.mint(
+                sellerDetails.seller,
+                sellerDetails.tokenUri,
+                sellerDetails.royality
+            );
+
+            require(
+                instance.isApprovedForAll(
+                    sellerDetails.seller,
+                    address(this)
+                ),
+                "MarketPlace: Collection must be approved."
+            );
+
+            instance.transferFrom(
+                sellerDetails.seller,
+                msg.sender,
+                tokenId
+            );
+        }
+        // Write Fund Tranfer Code
+        // creating IERC20 instance
+        IERC20 instanceERC20 = IERC20(sellerDetails.paymentAssetAddress);
+
+        require(
+            sellerDetails.amount <= instanceERC20.balanceOf(msg.sender),
+            "MarketPlace: Insufficient Amount"
+        );
+
+        require(
+            instanceERC20.allowance(msg.sender, address(this)) >=
+                sellerDetails.amount,
+            "MarketPlace: Check the token allowance."
+        );
+
+        // transfer seller amount - platformfee
+        uint256 feeOnPlatform = (sellerDetails.amount * platFormFeePercent) /
+            (100 * decimalPrecision);
+
+        instanceERC20.transferFrom(msg.sender, address(this), feeOnPlatform);
+
+        uint256 remaining_amount = sellerDetails.amount - feeOnPlatform;
+
+        instanceERC20.transferFrom(
+            msg.sender,
+            sellerDetails.seller,
+            remaining_amount
+        );
+
+        emit flatSale(
+            sellerDetails.nonce,
+            sellerDetails.seller,
+            sellerDetails.tokenId,
+            sellerDetails.assetAddress,
+            sellerDetails.amount
+        );
+        
+        /// nonce is ture
+        isNonceProcessed[sellerDetails.nonce] = true;
+    }
+    
+   /**
      * @dev This method allows authorised users to MINT/SELL the NFT through lazyAuction.
      * @notice This method allows authorised users to sell/buy NFT on MARKETPLACE
      * @param sellerDetails: Details of Seller.
@@ -75,39 +187,34 @@ contract Auction is Initializable, OwnableUpgradeable {
     ) external {
         require(
             !isNonceProcessed[sellerDetails.nonce],
-            "Auction: nonce already process"
+            "MarketPlace: nonce already process"
         );
 
         address sellerSigner = verifySellerSign(sellerDetails);
 
         require(
             sellerDetails.seller == sellerSigner,
-            "seller verification failed"
-        );
-
-        require(
-            !isNonceProcessed[sellerDetails.nonce],
-            "Auction: nonce already process"
+            "MarketPlace: seller verification failed"
         );
 
         address winnerSigner = verifyWinnerSign(winnerDetails);
 
         require(
             winnerDetails.winnerAddress == winnerSigner,
-            "Auction: seller sign verification failed"
+            "MarketPlace: seller sign verification failed"
         );
 
         // Mint
         IERC721Mint instance = IERC721Mint(sellerDetails.assetAddress);
         require(
             instance.isApprovedForAll(sellerDetails.seller, address(this)),
-            "Auction: address not approve"
+            "MarketPlace: address not approve"
         );
         uint256 tokenId = sellerDetails.tokenId;
         if (tokenId == 0) {
             tokenId = instance.mint(
                 sellerDetails.seller,
-                sellerDetails.URI,
+                sellerDetails.tokenUri,
                 sellerDetails.royality
             );
         }
@@ -124,13 +231,13 @@ contract Auction is Initializable, OwnableUpgradeable {
         require(
             instanceERC20.balanceOf(winnerDetails.winnerAddress) >=
                 winnerDetails.amount,
-            "Auction: Insuficent fund"
+            "MarketPlace: Insuficent fund"
         );
 
         require(
             instanceERC20.allowance(msg.sender, address(this)) >=
                 sellerDetails.amount,
-            "Auction: Check the token allowance."
+            "MarketPlace: Check the token allowance."
         );
 
         // platformfee/ServiceFee
@@ -191,16 +298,13 @@ contract Auction is Initializable, OwnableUpgradeable {
      *@dev Method: is used to provide signer.
      *@param sellerDetails: Details about seller of the NFT Auction.
      */
-    function verifySellerSign(SellerDetails calldata sellerDetails)
-        public
-        pure
-        returns (address)
-    {
+    function verifySellerSign(
+       SellerDetails calldata sellerDetails ) public pure returns (address) {
         bytes32 hash = keccak256(
             abi.encodePacked(
                 sellerDetails.assetAddress,
                 sellerDetails.tokenId,
-                sellerDetails.URI,
+                sellerDetails.tokenUri,
                 sellerDetails.paymentAssetAddress,
                 sellerDetails.amount
             )
@@ -240,7 +344,8 @@ contract Auction is Initializable, OwnableUpgradeable {
             uint8 v
         )
     {
-        require(sig.length == 65, "Auction: invalid signature length");
+        require(sig.length == 65, "MarketPlace: invalid signature length.");
+
         assembly {
             r := mload(add(sig, 32))
             s := mload(add(sig, 64))
@@ -248,11 +353,13 @@ contract Auction is Initializable, OwnableUpgradeable {
         }
     }
 
-    // Fallback function must be declared as external.
+    /// Fallback function must be declared as external.
     fallback() external payable {
-        // send / transfer (forwards 2300 gas to this fallback function)
-        // call (forwards all of the gas)
+        /// send / transfer (forwards 2300 gas to this fallback function)
+        /// call (forwards all of the gas)
     }
 
-    receive() external payable {}
+    receive() external payable {
+        /// custom function code
+    }
 }
