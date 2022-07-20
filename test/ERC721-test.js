@@ -1,41 +1,43 @@
 const { expect } = require("chai");
 const { ethers, upgrades } = require("hardhat");
 
-let deployer, add1, add2, erc721Token;
+let deployer, add1, add2, myNFT, tokenId;
 
 describe("ERC721Token", () => {
   before(async () => {
     accounts = await ethers.getSigners();
     [deployer, add1, add2, add3, add4, add5, _] = accounts;
 
-    let ERC721Token = await hre.ethers.getContractFactory("ERC721Token");
+    
 
-    erc721Token = await upgrades.deployProxy(ERC721Token, [500], {
+    let MyNFT = await hre.ethers.getContractFactory("ERC721Token");
+
+    myNFT = await upgrades.deployProxy(MyNFT, [500], {
       initializer: "initialize",
     });
-    await erc721Token.deployed();
-    console.log("ERC721Token deployed to:", erc721Token.address);
+    await myNFT.deployed();
+    console.log("MyNFT deployed to:", myNFT.address);
   });
 
   describe("Setter Methods ", () => {
     it("Should check that Maximum Royalty is", async () => {
-      expect(await erc721Token.maximumRoyality()).to.be.equals(500);
+      expect(await myNFT.maximumRoyality()).to.be.equals(500);
     });
 
     it("Should check that NFT is mint ", async () => {
-      await erc721Token.mint(deployer.address, "hello world", 400);
-      expect(await erc721Token.ownerOf(1)).to.be.equal(deployer.address);
+      await myNFT.mint(deployer.address, "hello world", 400);
+      expect(await myNFT.ownerOf(1)).to.be.equal(deployer.address);
     });
 
     it("Should check royality", async () => {
       await expect(
-        erc721Token.mint(deployer.address, "hello world", 800)
+        myNFT.mint(deployer.address, "hello world", 800)
       ).to.be.revertedWith("Royality should be less");
     });
 
     it("Should check Address", async () => {
       await expect(
-        erc721Token.mint(
+        myNFT.mint(
           "0x0000000000000000000000000000000000000000",
           "hello world",
           400
@@ -46,30 +48,30 @@ describe("ERC721Token", () => {
 
   describe("transferFrom Method", () => {
     it("Should transfer token betwen accounts", async () => {
-      await erc721Token
+      await myNFT
         .connect(deployer)
         .transferFrom(deployer.address, add1.address, 1);
-      const add1balance = await erc721Token.balanceOf(add1.address);
+      const add1balance = await myNFT.balanceOf(add1.address);
       console.log("balance", add1balance);
     });
   });
 
   describe("balanceOf Method ", () => {
     it("Should return balance of the acoount", async () => {
-      const abc = await erc721Token.balanceOf(add1.address);
+      const abc = await myNFT.balanceOf(add1.address);
       console.log("balance", abc);
     });
   });
 
   describe("approve Method ", () => {
     it("Should approve the account", async () => {
-      await erc721Token.connect(add1).approve(add2.address, 1);
+      await myNFT.connect(add1).approve(add2.address, 1);
 
-      expect(await erc721Token.getApproved(1)).to.be.equal(add2.address);
+      expect(await myNFT.getApproved(1)).to.be.equal(add2.address);
     });
 
     it("Should check account not approve", async () => {
-      await expect(erc721Token.approve(add1.address, 1)).to.be.revertedWith(
+      await expect(myNFT.approve(add1.address, 1)).to.be.revertedWith(
         "ERC721: approval to current owner"
       );
     });
@@ -77,9 +79,9 @@ describe("ERC721Token", () => {
 
   describe("setApprovalForAll Method ", () => {
     it("Should Approved for all", async () => {
-      await erc721Token.setApprovalForAll(add2.address, true);
+      await myNFT.setApprovalForAll(add2.address, true);
       expect(
-        await erc721Token.isApprovedForAll(deployer.address, add2.address)
+        await myNFT.isApprovedForAll(deployer.address, add2.address)
       ).to.be.equal(true);
     });
   });
@@ -87,16 +89,14 @@ describe("ERC721Token", () => {
   describe("Checking that getApproved function", () => {
     it("Should check tokenId address", async () => {
       await expect(
-        erc721Token.connect(add1.address).getApproved(2)
+        myNFT.connect(add1.address).getApproved(2)
       ).to.be.revertedWith("ERC721: invalid token ID");
     });
   });
   describe("Checking that supportInterface function", () => {
     it("Should check the Interface id", async () => {
-      expect(await erc721Token.supportsInterface(0x01ffc9a7)).to.be.equal(true);
-      expect(await erc721Token.supportsInterface(0xffffffff)).to.be.equal(
-        false
-      );
+      expect(await myNFT.supportsInterface(0x01ffc9a7)).to.be.equal(true);
+      expect(await myNFT.supportsInterface(0xffffffff)).to.be.equal(false);
     });
   });
 });
