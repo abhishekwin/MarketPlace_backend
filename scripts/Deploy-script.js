@@ -15,7 +15,6 @@ async function main() {
   const myToken = await ERC20Token.deploy("1000");
 
   await myToken.deployed();
-
   console.log("ERC20Token deployed to:", myToken.address);
 
   }
@@ -35,7 +34,7 @@ async function main() {
       initializer: "initialize",
     });
   
-    await flatSale.deployed();
+    await marketPlace.deployed();
     console.log("MarketPlace deployed to:", marketPlace.address);
   
   
