@@ -1,14 +1,12 @@
 const { expect } = require("chai");
 const { ethers, upgrades } = require("hardhat");
 
-let deployer, add1, add2, erc721Token, tokenId;
+let deployer, add1, add2, erc721Token;
 
 describe("ERC721Token", () => {
   before(async () => {
     accounts = await ethers.getSigners();
     [deployer, add1, add2, add3, add4, add5, _] = accounts;
-
-    
 
     let ERC721Token = await hre.ethers.getContractFactory("ERC721Token");
 
@@ -96,7 +94,9 @@ describe("ERC721Token", () => {
   describe("Checking that supportInterface function", () => {
     it("Should check the Interface id", async () => {
       expect(await erc721Token.supportsInterface(0x01ffc9a7)).to.be.equal(true);
-      expect(await erc721Token.supportsInterface(0xffffffff)).to.be.equal(false);
+      expect(await erc721Token.supportsInterface(0xffffffff)).to.be.equal(
+        false
+      );
     });
   });
 });
