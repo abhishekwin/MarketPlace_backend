@@ -1,0 +1,41 @@
+
+.footer{
+    background-color: #07213b;
+    margin-top: 5%;
+    padding: 2%;
+}
+
+.footer h5{
+    font-size: 1.1rem;
+    color: #fff;
+    font-weight: 500;
+}
+
+.list__item{
+    border: none !important;
+}
+.list__item a{
+    text-decoration: none !important;
+    color: #fff !important;
+}
+.footer .logo{
+    color: #fff;
+}
+.list-group-item{
+    background-color: #07213b !important;
+}
+.social__links span a{
+    text-decoration: none !important;
+    color: #fff !important;
+    font-size: 2.2rem;
+}
+.input__mail{
+    background-color: #343434;
+    border-radius: 2rem;
+    text-decoration: none;
+    padding: 10px;
+}
+.copy__right p{
+    color: #fff;
+    text-align: center;
+}
