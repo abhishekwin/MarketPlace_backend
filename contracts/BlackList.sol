@@ -4,22 +4,32 @@ pragma solidity ^0.8.0;
 import "contracts/mocks/interfaces/blackListInterface.sol";
 
 import "@openzeppelin/contracts/access/Ownable.sol";
-// import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract Blacklist is BlacklistInterface, Ownable {
+abstract contract Blacklist is BlacklistInterface, Ownable {
     mapping(address => bool) blacklisted;
+       event  Blacklisted(
+           address _node,
+           bool
+    );
 
-    function blacklist(address node) public  override onlyOwner {
+    modifier _isPermitted() {
+        
+        require(blacklisted[msg.sender], "User BlackListed");
+        _;
+    }
+    
+    function AddRemoveBlacklist(address node) public    {
+          if(!blacklisted[node]){
         blacklisted[node] = true;
-       emit Blacklisted(node);
-    }
+       emit Blacklisted(node,true);
 
-    function unblacklist(address node) public override onlyOwner {
+        }
+          
+        else {
         blacklisted[node] = false;
-        emit Unblacklisted(node);
-    }
 
-    function isPermitted(address node) public view  override returns (bool) {
-        return !blacklisted[node];
-    }
+       emit Blacklisted(node,false);
+        }   
+        
+}
 }
