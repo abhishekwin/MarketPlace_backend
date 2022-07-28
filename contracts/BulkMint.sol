@@ -3,9 +3,9 @@ pragma solidity ^0.8.4;
 
 import "erc721a/contracts/ERC721A.sol";
 import "erc721a/contracts/IERC721A.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Royalty.sol";
+import "@openzeppelin/contracts/token/common/ERC2981.sol";
 
-contract BulkMintNFT is ERC721A {
+contract BulkMintNFT is ERC721A, ERC2981 {
     uint256 public maxSupply;
     string baseURI;
     string baseURISuffix;
@@ -32,9 +32,10 @@ contract BulkMintNFT is ERC721A {
             "Max supply should be less"
         );
 
-        require(_royality <= royality, "Royality should be less");
-        // `_mint's second argument now takes in a `quantity`, not a `tokenId`.
-        _mint(msg.sender, quantity);
+        // require(_royality <= royality, "Royality should be less");
+        // // `_mint's second argument now takes in a `quantity`, not a `tokenId`.
+        // _mint(msg.sender, quantity);
+        // _setTokenRoyalty(quantity, to, );
     }
 
     function _baseURI() internal view virtual override returns (string memory) {
@@ -49,5 +50,15 @@ contract BulkMintNFT is ERC721A {
         returns (string memory)
     {
         return baseURISuffix;
+    }
+
+    function supportsInterface(bytes4 interfaceId)
+        public
+        view
+        virtual
+        override(ERC721A, ERC2981)
+        returns (bool)
+    {
+        return super.supportsInterface(interfaceId);
     }
 }
