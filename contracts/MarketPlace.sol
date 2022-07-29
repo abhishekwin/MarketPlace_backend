@@ -7,8 +7,9 @@ import "contracts/mocks/interfaces/IERC721Mint.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
 import "@openzeppelin/contracts-upgradeable/utils/math/SafeMathUpgradeable.sol";
+import "contracts/BlackList.sol";
 
-contract MarketPlace is Initializable, OwnableUpgradeable {
+contract MarketPlace is Initializable, OwnableUpgradeable,BlackList {
     using SafeMathUpgradeable for uint256;
     uint256 public platFormFeePercent;  /// State variable for PlatFormFeePercent.
     uint256 public constant decimalPrecision = 100;
@@ -81,7 +82,7 @@ contract MarketPlace is Initializable, OwnableUpgradeable {
      *@notice This method is used to Buy NFT.
      *@param sellerDetails: the seller details provide all the necessary detail for the seller.
      */
-    function lazyBuy(SellerDetails calldata sellerDetails) external {
+    function lazyBuy(SellerDetails calldata sellerDetails) external _isPermitted{
         require(
             !isNonceProcessed[sellerDetails.nonce],
             "MarketPlace: nonce already process"
@@ -184,7 +185,7 @@ contract MarketPlace is Initializable, OwnableUpgradeable {
     function lazyAuction(
         SellerDetails calldata sellerDetails,
         WinnerDetails calldata winnerDetails
-    ) external {
+    ) external _isPermitted {
         require(
             !isNonceProcessed[sellerDetails.nonce],
             "MarketPlace: nonce already process"
