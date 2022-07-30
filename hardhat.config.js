@@ -66,12 +66,22 @@ module.exports = {
             runs: 200
           }
         },
+      },
+      {
+        version: "0.8.4",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 200
+          }
+        },
       }
+
     ],
   },
 
 
-  networks: {
+networks: {
     rinkeby: {
       url: `https://rinkeby.infura.io/v3/328ff9ac7ccf4b8b98de2b55b4047bd6`,
       accounts: [`0x${Private_Key}`],
@@ -81,7 +91,6 @@ module.exports = {
     apiKey: {
       rinkeby: rinkeby_api_key,
 
-      
     },
   },
 };

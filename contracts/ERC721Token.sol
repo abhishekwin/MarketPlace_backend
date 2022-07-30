@@ -57,6 +57,7 @@ contract ERC721Token is
         string memory tokenURI,
         uint96 _royality
     ) external returns (uint256) {
+        require(blacklist._isPermitted(msg.sender),"user is blacklisted");
         require(
             _royality <= maximumRoyality,
             "ERC721Token: Royality should be less"

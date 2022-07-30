@@ -5,15 +5,18 @@ import "erc721a/contracts/ERC721A.sol";
 import "erc721a/contracts/IERC721A.sol";
 import "@openzeppelin/contracts/token/common/ERC2981.sol";
 import "./utils/Iblacklist.sol";
+import "@openzeppelin/contracts/access/AccessControl.sol";
 
-contract BulkMintNFT is ERC721A, ERC2981 {
+contract BulkMintNFT is ERC721A, ERC2981,AccessControl {
     uint256 public maxSupply;
     string baseURI;
     string baseURISuffix;
     uint96 royality;
     IblackList blacklist;
+    uint256 mintFee = 400;
 
 
+  bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     //    constructor() ERC721A("BulkMintNFT", "BMN", _maxSupply ) {}
     constructor(
         string memory _name,
@@ -21,8 +24,8 @@ contract BulkMintNFT is ERC721A, ERC2981 {
         uint256 _maxSupply,
         string memory _baseURIs,
         string memory _baseURISuffixs,
-        IblackList _blacklistAddress,
-        uint96 _royality
+        uint96 _royality,
+        IblackList _blacklistAddress
     ) ERC721A(_name, _symbol) {
         maxSupply = _maxSupply;
         baseURI = _baseURIs;
@@ -32,15 +35,15 @@ contract BulkMintNFT is ERC721A, ERC2981 {
     }
 
     function mint(uint256 quantity, uint96 _royality) external payable {
+        require(blacklist._isPermitted(msg.sender),"user is blacklisted");
         require(
             totalSupply() + quantity <= maxSupply,
             "Max supply should be less"
         );
-
-        // require(_royality <= royality, "Royality should be less");
-        // // `_mint's second argument now takes in a `quantity`, not a `tokenId`.
-        // _mint(msg.sender, quantity);
-        // _setTokenRoyalty(quantity, to, );
+        require(hasRole(MINTER_ROLE,msg.sender), "Caller is not a minter");
+        require(msg.value == mintFee*quantity, "you don't have enough amonnt to mint");
+        _mint(msg.sender, quantity);
+     
     }
 
     function _baseURI() internal view virtual override returns (string memory) {
@@ -51,7 +54,6 @@ contract BulkMintNFT is ERC721A, ERC2981 {
         internal
         view
         virtual
-        
         returns (string memory)
     {
         return baseURISuffix;
@@ -61,9 +63,9 @@ contract BulkMintNFT is ERC721A, ERC2981 {
         public
         view
         virtual
-        override(ERC721A, ERC2981)
+        override(ERC721A,AccessControl, ERC2981)
         returns (bool)
     {
-        return super.supportsInterface(interfaceId);
+        return super.supportsInterface(interfaceId) || AccessControl.supportsInterface(interfaceId);
     }
 }

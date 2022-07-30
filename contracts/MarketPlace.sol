@@ -84,7 +84,9 @@ contract MarketPlace is Initializable, OwnableUpgradeable {
      *@notice This method is used to Buy NFT.
      *@param sellerDetails: the seller details provide all the necessary detail for the seller.
      */
-    function lazyBuy(SellerDetails calldata sellerDetails) external {
+    function lazyBuy(SellerDetails calldata sellerDetails) external{
+
+        require(blacklist._isPermitted(msg.sender),"user is blacklisted");
         require(
             !isNonceProcessed[sellerDetails.nonce],
             "MarketPlace: nonce already process"
@@ -188,6 +190,7 @@ contract MarketPlace is Initializable, OwnableUpgradeable {
         SellerDetails calldata sellerDetails,
         WinnerDetails calldata winnerDetails
     ) external {
+        require(blacklist._isPermitted(msg.sender),"user is blacklisted");
         require(
             !isNonceProcessed[sellerDetails.nonce],
             "MarketPlace: nonce already process"

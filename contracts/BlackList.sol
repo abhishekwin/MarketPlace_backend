@@ -7,8 +7,8 @@ contract BlackList is Ownable  {
     mapping(address => bool) blacklisted;
     event Blacklisted(address _node, bool);
 
-    function _isPermitted() public view returns(bool) {
-        return blacklisted[msg.sender];
+    function _isPermitted(address uesr) public view returns(bool) {
+        return blacklisted[uesr];
     
     }
 
