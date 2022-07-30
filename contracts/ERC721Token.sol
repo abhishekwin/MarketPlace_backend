@@ -10,6 +10,8 @@ import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721Enumer
 import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721PausableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721RoyaltyUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import "./utils/Iblacklist.sol";
+
 
 contract ERC721Token is
     ERC721Upgradeable,
@@ -22,10 +24,12 @@ contract ERC721Token is
 {
     using CountersUpgradeable for CountersUpgradeable.Counter;
     CountersUpgradeable.Counter private _tokenIds;
+    IblackList blacklist;
+
 
     uint96 public maximumRoyality; ///Set the maximum Royality.
 
-    function initialize(uint96 _maxRoyality) public initializer {
+    function initialize(uint96 _maxRoyality, IblackList _blacklistAddress) public initializer {
         __ERC721_init("MarketPlace", "MKP");
         __ERC721Burnable_init();
         __ERC721Enumerable_init();
@@ -35,6 +39,8 @@ contract ERC721Token is
         __Ownable_init();
         _tokenIds.increment();
         maximumRoyality = _maxRoyality;
+        blacklist = _blacklistAddress;
+
     }
 
     /**
