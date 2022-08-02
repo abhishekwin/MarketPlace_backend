@@ -11,8 +11,11 @@ describe("ERC721Token", () => {
     
 
     let MyNFT = await hre.ethers.getContractFactory("ERC721Token");
+    let BlackList = await hre.ethers.getContractFactory("BlackList");
+    blacklist = await BlackList.deploy();
 
-    myNFT = await upgrades.deployProxy(MyNFT, [500], {
+
+    myNFT = await upgrades.deployProxy(MyNFT, [500,blacklist.address], {
       initializer: "initialize",
     });
     await myNFT.deployed();
@@ -20,6 +23,7 @@ describe("ERC721Token", () => {
   });
 
   describe("Setter Methods ", () => {
+    // it ("Should Check that Adress is Blacklist or")
     it("Should check that Maximum Royalty is", async () => {
       expect(await myNFT.maximumRoyality()).to.be.equals(500);
     });

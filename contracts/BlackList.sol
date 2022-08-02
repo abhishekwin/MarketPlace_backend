@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.4;
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 
@@ -8,7 +8,7 @@ contract BlackList is Ownable  {
     event Blacklisted(address _node, bool);
 
     function _isPermitted(address uesr) public view returns(bool) {
-        return blacklisted[uesr];
+        return !blacklisted[uesr];
     
     }
 

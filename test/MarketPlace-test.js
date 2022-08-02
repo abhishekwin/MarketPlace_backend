@@ -34,10 +34,14 @@ describe("marketPlace", () => {
       _,
     ] = accounts;
 
+    let BlackList = await hre.ethers.getContractFactory("BlackList");
+    blacklist = await BlackList.deploy();
+
+
     // NFT721 Deployed
     let ERC721Token = await hre.ethers.getContractFactory("ERC721Token");
 
-    myNFT = await upgrades.deployProxy(ERC721Token, [500], {
+    myNFT = await upgrades.deployProxy(ERC721Token, [500,blacklist.address], {
       initializer: "initialize",
     });
     await myNFT.deployed();
@@ -54,7 +58,7 @@ describe("marketPlace", () => {
 
     //  We get the contract to deploy
     MarketPlace = await hre.ethers.getContractFactory("MarketPlace");
-    marketPlace = await upgrades.deployProxy(MarketPlace, [], {
+    marketPlace = await upgrades.deployProxy(MarketPlace, [blacklist.address], {
       initializer: "initialize",
     });
     await marketPlace.deployed();
