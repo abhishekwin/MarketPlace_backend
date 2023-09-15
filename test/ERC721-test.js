@@ -25,6 +25,12 @@ describe("ERC721Token", () => {
   describe("Setter Methods ", () => {
     // it ("Should Check that Adress is Blacklist or")
     it("Should check that Maximum Royalty is", async () => {
+      let blockNumber = await ethers.provider.getBlockNumber();
+      let block = await ethers.provider.getBlock(blockNumber);
+      let startTime = block.timestamp;
+      let oneyear = 356*24*60*60
+      let one = startTime+oneyear
+      console.log(one,">>>>>>>>>");
       expect(await myNFT.maximumRoyality()).to.be.equals(500);
     });
 
